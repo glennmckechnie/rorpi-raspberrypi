@@ -1,0 +1,34 @@
+#!/bin/sh
+echo "View the contents of this file and make edits as appropriate.
+There is no turning back once started.
+
+With large media sizes, we are no longer scrambling to save space, so
+all the following are optional.
+apt-get clean is probably the most useful command to run at any time.
+It won't damage your install, and will save a lot of space over the long
+haul.
+When you are happy with your decisions, comment out the exit 0 after
+this line (when viewing the script)"
+exit 0
+rm -rf /usr/share/doc/*
+rm -rf /usr/share/man/*
+rm -rf /var/lib/apt/lists/security*
+rm -rf /var/lib/apt/lists/debian*
+rm -f /var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin
+rm -f /var/lib/dpkg/available-old /var/lib/dpkg/status-old
+rm -f /var/cache/debconf/config.dat-old /var/cache/debconf/templates.dat-old
+
+apt-get clean > /dev/null
+#find /var/lib/apt/lists -type f \( -name "*Packages" -o -name "*Sources" \)  -exec rm -f '{}' ';' -exec touch '{}' ';' 2>/dev/null
+find /var/lib/apt/lists -type f \( -name "*Packages*" -o -name "*Sources*" -o -name "*Release*" \)  -exec rm -f '{}' ';' 2>/dev/null
+dpkg --clear-avail > /dev/null
+rm -f /var/cache/apt/*.bin > /dev/null
+apt-cache gencaches > /dev/null
+
+find /usr/share/locale -name "*.mo" -exec rm '{}' ';'  2>/dev/null
+find /usr/share/ -name "*.info.gz" -exec rm '{}' ';'  2>/dev/null
+find /usr/share/locale -path '*/en' -mindepth 1 -maxdepth 2 -prune -o -print 	-exec rm -rf '{}' ';' 2>/dev/null >/dev/null
+rm -f /var/lib/dpkg/info/*.md5sums
+#rm -f /var/lib/dpkg/info/*.postinst
+
+rm -f /boot/*.bmp

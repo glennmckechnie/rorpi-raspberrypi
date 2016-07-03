@@ -1,0 +1,16 @@
+#!/bin/sh
+
+sync
+wait
+sync
+#dphys-swapfile.mubox swapoff
+dphys-swapfile swapoff
+wait
+sync
+wait
+sync
+mount -o remount,ro /
+mount -o remount,ro /boot
+
+#functionality added to ~/.bashrc
+#mount | grep root
