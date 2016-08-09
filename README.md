@@ -1,5 +1,5 @@
 # rorpi - raspberrypi
-A method to run a Raspberry Pi, using the Raspbian distribution, configured with a read-only / file system  - thus the name "Read Only Root Pi" or RORPi
+A method to run a Raspberry Pi, using the Raspbian distribution, configured with a read only / file system  - thus the name "Read Only Root Pi" or RORPi
 
 It should then be able to run the Weewx weather station software ( http://weewx.com ) with the minimum of upkeep. It's not limited to weewx either, it should also be re-configurable for anything else that fits the same criteria.
 
