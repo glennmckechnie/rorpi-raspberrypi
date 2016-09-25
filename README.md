@@ -8,3 +8,6 @@ Like any system that holds valuable information, it will require the addition of
 
 Visit the wiki for greater detail -
 https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/Rorpi-Home
+
+For discussion, visit the google group at
+https://groups.google.com/forum/#!forum/rorpi-discussion
