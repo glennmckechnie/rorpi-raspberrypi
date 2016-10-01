@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Original script kindly contributed by ssinfod.
+# Many thanks for kick starting this, it was long overdue (and uncovered
+# quite a few typos in the process)
+#
 # Reference:
 # https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-readonly
 #
