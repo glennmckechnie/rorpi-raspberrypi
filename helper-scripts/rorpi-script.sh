@@ -7,12 +7,12 @@
 #       If we execute it more than once, then we should verify the content of: '.bash_logout' and '.bashrc' for root and pi user.
 #         
 # Version
-#  0.1: initial version
+#  0.1.1: initial version
 
 #===============================================================================
 # Function
 #===============================================================================
-function backup_file {
+backup_file () {
     #echo "$1"
     EXT='.org'
     FILE1=$1
@@ -81,8 +81,8 @@ mkdir /ro/var/cache
 mkdir /ro/var/cache/unbound
 mkdir /ro/var/lib
 mkdir /ro/var/lib/dhcp
-mkdir /ro/var/lib/dhcpcd5
- (even though it's obvious if you read the actual script)mkdir /ro/var/lib/logrotate
+mkdir /ro/var/lib/dhcpcd5 # (even though it's obvious if you read the actual script)
+mkdir /ro/var/lib/logrotate
 mkdir /ro/var/lib/ntp
 mkdir /ro/var/spool
 mkdir /ro/var/spool/cron
@@ -148,14 +148,14 @@ cd /root
 cp ./$FOLDER/lib/voyage-utils/100-rpi /lib/voyage-utils/
 
 #Create stub
-touch /ro/var/cache/unbound/empty-stub
-touch /ro/var/lib/dhcp/empty-stub
-touch /ro/var/lib/dhcpcd5/empty-stub
-touch /ro/var/lib/logrotate/empty-stub
-touch /ro/var/lib/ntp/empty-stub
-touch /ro/var/spool/cron/crontabs/empty-stub
-touch /ro/var/spool/rsyslog/empty-stub
-touch /ro/var/www/html/weewx/empty-stub
+#touch /ro/var/cache/unbound/empty-stub
+#touch /ro/var/lib/dhcp/empty-stub
+#touch /ro/var/lib/dhcpcd5/empty-stub
+#touch /ro/var/lib/logrotate/empty-stub
+#touch /ro/var/lib/ntp/empty-stub
+#touch /ro/var/spool/cron/crontabs/empty-stub
+#touch /ro/var/spool/rsyslog/empty-stub
+#touch /ro/var/www/html/weewx/empty-stub
 
 #bash
 #Warning: Execute script only once.
@@ -167,8 +167,8 @@ cat ./$FOLDER/root/.bash_logout.rorpi >> /etc/skel/.bash_logout #append only onc
 cat ./$FOLDER/root/.bashrc-append.rorpi >> /root/.bashrc        #append only once?
 cat ./$FOLDER/root/.bashrc-append.rorpi >> /etc/skel/.bashrc    #append only once?
 
-cat ./$FOLDER/root/.bash_logout.rorpi >> /ro/home/pi/.bash_logout
-cat ./$FOLDER/root/.bashrc-append.rorpi >> /ro/home/pi/.bashrc #append only once?
+cat ./$FOLDER/root/.bash_logout.rorpi >> /home/pi/.bash_logout
+cat ./$FOLDER/root/.bashrc-append.rorpi >> /home/pi/.bashrc #append only once?
 
 #Helper scripts to remount
 cp ./$FOLDER/usr/local/sbin/fastreboot /usr/local/sbin/fastreboot
@@ -176,8 +176,8 @@ cp ./$FOLDER/usr/local/sbin/remountro /usr/local/sbin/remountro
 cp ./$FOLDER/usr/local/sbin/remountrw /usr/local/sbin/remountrw
 cp ./$FOLDER/usr/local/sbin/remove.docs /usr/local/sbin/remove.docs
 cd /usr/local/sbin
-ln remountro rero
-ln remountrw rerw
+ln -s remountro rero  # create softlinks as it makes it obvious they are duplicate files
+ln -s remountrw rerw
 cd /root
 
 #Symlink to tmp
