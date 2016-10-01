@@ -37,7 +37,7 @@ call_pause(){
   read action
   case $action in
         yes)
-           printf "\n\t Writing %s to %s \n\n\n $image, $devyce"
+           printf "\n\t Writing %s to %s \n\n\n" $image $devyce
            ;;
           *)
            printf "\n\tAborting this program on user request\n\n"
@@ -58,7 +58,7 @@ if [ "$type_p" = "FAT32" ]
       printf "\n\tThe device appears to be a Windows, or valid, device\n\tPlease confirm if it is okay to erase its contents?\n"
       #pause "$image $devyce"
     else
-      printf "\n\n  Aborting script as this (%s) doesn't appear to be a\n\t\tWindows partion\n $devyce"
+      printf "\n\n  Aborting script as this (%s) doesn't appear to be a\n\t\t suitable partion (Windows FAT32)\n" $devyce
       exit 0
 fi
 }
@@ -66,7 +66,7 @@ call_usage "$1" "$2"
 
 if [ ! -f "${basedir}/${image}" ]
 then 
-        printf "\nThe image file ( %s ) was not found in this directory ( %s )\n" "${image}", "${basedir}"
+        printf "\nThe image file ( %s ) was not found in this directory ( %s )\n" "${image}" "${basedir}"
         call_usage
         exit 0
 fi
