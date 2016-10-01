@@ -11,3 +11,11 @@ https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/Rorpi-Home
 
 For discussion, visit the google group at
 https://groups.google.com/forum/#!forum/rorpi-discussion
+
+Update:- 1st October 2016
+
+Scripts have been added (in the helper-scripts directory), along with a gzipped tarball (in the main directory) of the required files and directories. This is to preserve ownership and permissions of the required files, and as it turns out helps in the automation of the read-only installation process.
+
+rorpi-script.sh has been contributed by ssinfod. It can be run to automatically download that compressed file, unpack its contents accordingly and perform the necessary actions to turn the system into a read-only one.
+
+sdcard_write_read_confirm.sh is a script to help with the transfer of the initial raspbian image to the SDCard, when running under Linux.
