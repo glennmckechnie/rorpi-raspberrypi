@@ -221,8 +221,8 @@ else
 
   mv ./$FOLDER/root/.bash_logout.rorpi ./$FOLDER/root/.bash_logout.rorpi.done
   mv ./$FOLDER/root/.bashrc-append.rorpi ./$FOLDER/root/.bashrc-append.rorpi.done #setup skip test
-  rm -f ./$FOLDER/home/pi/.bash_logout.rorpi
-  rm -f ./$FOLDER/home/pi/.bashrc-append.rorpi
+  rm -f ./$FOLDER/ro/home/pi/.bash_logout.rorpi
+  rm -f ./$FOLDER/ro/home/pi/.bashrc-append.rorpi
 fi
 
 #Copy the other files to folder
