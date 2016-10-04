@@ -211,13 +211,13 @@ then
   echo "Note: We shoud append text only once to .bash_logout and .bashrc"
   echo "and we've done it already"
 else
-  cat ./$FOLDER/root/.bash_logout.rorpi >> /root/.bash_logout     #append only once.
-  cat ./$FOLDER/root/.bash_logout.rorpi >> /etc/skel/.bash_logout #append only once
-  cat ./$FOLDER/root/.bashrc-append.rorpi >> /root/.bashrc        #append only once?
-  cat ./$FOLDER/root/.bashrc-append.rorpi >> /etc/skel/.bashrc    #append only once?
+  cat ./$FOLDER/root/.bash_logout.rorpi >> /root/.bash_logout
+  cat ./$FOLDER/root/.bashrc-append.rorpi >> /root/.bashrc
 
-  cat ./$FOLDER/home/pi/.bash_logout.rorpi >> /home/pi/.bash_logout
-  cat ./$FOLDER/home/pi/.bashrc-append.rorpi >> /home/pi/.bashrc
+  cat ./$FOLDER/ro/home/pi/.bash_logout.rorpi >> /etc/skel/.bash_logout
+  cat ./$FOLDER/ro/home/pi/.bashrc-append.rorpi >> /etc/skel/.bashrc
+  cat ./$FOLDER/ro/home/pi/.bash_logout.rorpi >> /home/pi/.bash_logout
+  cat ./$FOLDER/ro/home/pi/.bashrc-append.rorpi >> /home/pi/.bashrc
 
   mv ./$FOLDER/root/.bash_logout.rorpi ./$FOLDER/root/.bash_logout.rorpi.done
   mv ./$FOLDER/root/.bashrc-append.rorpi ./$FOLDER/root/.bashrc-append.rorpi.done #setup skip test
