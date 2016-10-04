@@ -9,29 +9,60 @@
 #
 # Note: This script must be executed as root. (sudo -i)
 # Note: This script should be executed only once.
-#       If we execute it more than once, then we should verify the content of: '.bash_logout' and '.bashrc' for root and pi user.
+#       If we execute it more than once, then we should verify the content of: 
+#       '.bash_logout' and '.bashrc' for root and pi user.
 #         
 # Version
 # 0.1.1: initial version. Kindly contributed by ssinfod
 # 0.02: (was 0.1.2) introduce system check (run only on a raspberry pi only). Add stop file
 #      so we can only run this once. Fix resolvconf confusion. Copy crontab rather than create
-#      (due to group and permission issues). Remove touch's as they are now redundant. Add check 
-#      for .bash* cats (we do only want to do them once). softlinks for rerw and rero.
+#      (due to group and permission issues). Remove touch's as they are now redundant. Add check
+#      for .bash* cats (we do only want to do them once). Softlinks for rerw and rero.
 #      Remove /ro/home/pi templates. Checked with the assistance of ssinfod
 # 0.03: (was 0.1.3) make use of mkdir -p to simplify process. Add weewx/NOAA directory. Checked
 #      with the assistance of ssinfod
-# Version 0.03
+# 0.04: introduce version self check. Reinstate /ro/home/pi/*.rorpi as templates for /home/pi. 
+#      Add feedback messages. Remove pi/.bash* templates from /ro area (not needed as we use /home/pi)
+
+# Version 0.04
 
 
-rorpitar=rorpi-ro-setup.0.0.3.tar.gz
-TEMP=""
+rorpitar_version=04 # keep this in sync with the last 2 numbers of latest Version number above,
+                    # as tarball will probably be updated as well
+rorpitar=rorpi-ro-setup.0.0."$rorpitar_version".tar.gz
+
 FOLDER=""
 
 #===============================================================================
 # Function
 #===============================================================================
+check_version()
+{
+  # http://fitnr.com/bash-comparing-version-strings.html used as template.
+  tempfile=$RANDOM
+  wget -O /tmp/$tempfile https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/helper-scripts/rorpi-script.sh
+
+  hubversion=$(grep /tmp/$tempfile -e '# Version ' | awk -F " " '{print $3}')
+  thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
+  winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
+   if [[ "$winner" < $hubversion ]]
+   then
+     cp "/tmp/$tempfile" "/tmp/rorpi-script-$hubversion-$tempfile.sh"
+     echo " "An updated rorpi-script.sh "(Version $hubversion)" is available on github.
+     echo " "It is also available here at /tmp/rorpi-script-"$hubversion"-$tempfile.sh
+     echo " "It is strongly suggested to replace this script "(Version $thisversion)" and use it instead.
+     echo "   "cp /tmp/rorpi-script-"$hubversion"-"$tempfile".sh "$0"
+   exit 0
+   else
+     echo "script version on github is $hubversion"
+     echo "This version is $thisversion so doesn't need updating"
+     echo "This script will continue in 6 seconds (Ctrl-C to abort)"
+     sleep 6
+     return 0
+   fi
+}
+
 backup_file () {
-    #echo "$1"
     EXT='.org'
     FILE1=$1
     FILE2=$FILE1$EXT
@@ -51,8 +82,8 @@ backup_file () {
 STRING="Script begin..."
 echo $STRING
 
-# check if we are running on a raspberry pi, if so assume
-# it's okay to continue, if not Panic!
+# We don't want any accidents so we'll check if we are running on a raspberry pi
+# and if so assume it's okay to continue, if not we Panic! 
 
 grep /boot/issue.txt -e Raspberry > /dev/null 2>&1
 if (( $? != "0" ))
@@ -68,9 +99,15 @@ if [ "$(id -u)" != "0" ]; then
    exit 1 # exit with error
 fi
 
+# comment the next line if you really want to stick to this version
+check_version
+
+# Finally! Start the actual script.
+
 cd /root
 
-# Check for existence of file (see script end) and abort if present
+# But, check for the existence of a file that indicates we've run this once already
+# (see the end of this script) and abort if present
 if [  -f /root/rorpi-ro-setup/done-once-already ]
 then
     echo " Aborting script as it has already been run. "
@@ -93,6 +130,7 @@ fi
 cd /root
 
 # Backup file
+echo -e "\tBacking up files to *.org"
 backup_file '/boot/cmdline.txt'
 backup_file '/etc/dphys-swapfile'
 backup_file '/etc/fstab'
@@ -107,6 +145,7 @@ backup_file '/etc/init.d/checkroot-bootclean.sh'
 
 
 #Create directories
+echo -e "\t Creating directories"
 mkdir /etc/lighttpd
 mkdir /lib/voyage-utils
 mkdir -p /ro/home/pi
@@ -121,6 +160,7 @@ mkdir -p /var/www/html/weewx/NOAA  # if lighttpd is not installed
 
 # Create tmp directories. (needed for the symlink below)
 # Note: See also below for chown on ntp folder.
+echo -e "\tCreating /tmp directories"
 mkdir -p /tmp/var/cache/unbound
 mkdir -p /tmp/var/lib/dhcp
 mkdir /tmp/var/lib/dhcpcd5
@@ -134,6 +174,7 @@ mkdir -p /tmp/var/www/html/weeewx/NOAA
 FOLDER='rorpi-ro-setup'
 
 #boot
+echo -e "\tCopying system files"
 cp ./$FOLDER/boot/cmdline.txt.rorpi /boot/cmdline.txt
 
 #etc
@@ -151,6 +192,7 @@ cp -Rp ./$FOLDER/ro/var/spool/cron/crontabs /ro/var/spool/cron/crontabs # copied
 
 
 #Create link1 (soft?)
+echo -e "\tCreating symlinks"
 rm /etc/resolv.conf
 ln -sf /etc/resolvconf/run/resolv.conf /etc/resolv.conf
 
@@ -159,28 +201,33 @@ cd /etc/resolvconf
 ln -sf /run/resolvconf run
 cd /root
 
-#Copy the other files to folder
-cp ./$FOLDER/lib/voyage-utils/100-rpi /lib/voyage-utils/
-
 #bash
+echo -e "\tSetting up bash aliases, and extras"
 
 if [ -f "./$FOLDER/root/.bashrc-append.rorpi.done" ]
 then 
   #Warning: Execute script only once.
-  STRING="Note:We shoud append text only once to .bash_logout and .bashrc"
-  echo $STRING
+  echo "Skipping the .bash* step!"
+  echo "Note: We shoud append text only once to .bash_logout and .bashrc"
+  echo "and we've done it already"
 else
   cat ./$FOLDER/root/.bash_logout.rorpi >> /root/.bash_logout     #append only once.
   cat ./$FOLDER/root/.bash_logout.rorpi >> /etc/skel/.bash_logout #append only once
   cat ./$FOLDER/root/.bashrc-append.rorpi >> /root/.bashrc        #append only once?
   cat ./$FOLDER/root/.bashrc-append.rorpi >> /etc/skel/.bashrc    #append only once?
 
-  cat ./$FOLDER/root/.bash_logout.rorpi >> /home/pi/.bash_logout
-  cat ./$FOLDER/root/.bashrc-append.rorpi >> /home/pi/.bashrc #append only once?
+  cat ./$FOLDER/home/pi/.bash_logout.rorpi >> /home/pi/.bash_logout
+  cat ./$FOLDER/home/pi/.bashrc-append.rorpi >> /home/pi/.bashrc
 
   mv ./$FOLDER/root/.bash_logout.rorpi ./$FOLDER/root/.bash_logout.rorpi.done
-  mv ./$FOLDER/root/.bashrc-append.rorpi ./$FOLDER/root/.bashrc-append.rorpi.done
+  mv ./$FOLDER/root/.bashrc-append.rorpi ./$FOLDER/root/.bashrc-append.rorpi.done #setup skip test
+  rm -f ./$FOLDER/home/pi/.bash_logout.rorpi
+  rm -f ./$FOLDER/home/pi/.bashrc-append.rorpi
 fi
+
+#Copy the other files to folder
+echo -e "\t Copying remaining files, helper scripts"
+cp ./$FOLDER/lib/voyage-utils/100-rpi /lib/voyage-utils/
 
 #Helper scripts to remount
 cp ./$FOLDER/usr/local/sbin/fastreboot /usr/local/sbin/fastreboot
@@ -194,6 +241,7 @@ ln -sf remountrw rerw
 cd /root
 
 #Symlink to tmp
+echo -e "\tSetting up critical folder links"
 rm -rf /var/cache/unbound && ln -sf /tmp/var/cache/unbound /var/cache/unbound
 rm -rf /var/lib/dhcp && ln -sf /tmp/var/lib/dhcp /var/lib/dhcp
 rm -rf /var/lib/dhcpcd5 && ln -sf /tmp/var/lib/dhcpcd5 /var/lib/dhcpcd5
@@ -210,10 +258,13 @@ cd /var/lib
 chown ntp.ntp ntp
 
 #init script and swap
+echo -e "\tRun update-rc.d to enable voyage-sync" 
 update-rc.d voyage-sync defaults
 update-rc.d  dphys-swapfile disable
 
+echo -e "\tCreate lock file to prevent this script running again"
 touch /root/rorpi-ro-setup/done-once-already
+ls -al /root/rorpi-ro-setup/done-once-already
 
 STRING="Script end."
 echo $STRING
