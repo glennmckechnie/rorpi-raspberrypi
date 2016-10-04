@@ -12,7 +12,8 @@
 #      so we can only run this once. Fix resolvconf confusion. Copy crontab rather than create
 #      (due to group and permission issues). Remove touch's as they are now redundant. Add check 
 #      for .bash* cats (we do only want to do them once). softlinks for rerw and rero.
-#      Remove /ro/home/pi templates. 
+#      Remove /ro/home/pi templates.
+# Version 0.02
 
 rorpitar=rorpi-ro-setup.0.0.3.tar.gz
 TEMP=""
