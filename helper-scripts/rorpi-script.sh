@@ -42,7 +42,7 @@ check_version()
   tempfile=$RANDOM
   wget -O /tmp/$tempfile https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/helper-scripts/rorpi-script.sh
 
-  hubversion=$(grep /tmp/$tempfile -e '# Version ' | awk -F " " '{print $3}')
+  hubversion=$(grep /tmp/$tempfile -e '^# Version ' | awk -F " " '{print $3}')
   thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
