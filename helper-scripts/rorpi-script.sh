@@ -1,9 +1,4 @@
 #!/bin/bash
-#
-# Original script kindly contributed by ssinfod.
-# Many thanks for kick starting this, it was long overdue (and uncovered
-# quite a few typos in the process)
-#
 # Reference:
 # https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-readonly
 #
@@ -12,7 +7,12 @@
 #       If we execute it more than once, then we should verify the content of: '.bash_logout' and '.bashrc' for root and pi user.
 #         
 # Version
-#  0.1.2: initial version
+#  0.1.1: initial version
+# 0.2: (was 0.1.2) introduce system check (run only on a raspberry pi only). Add stop file
+#      so we can only run this once. Fix resolvconf confusion. Copy crontab rather than create
+#      (due to group and permission issues). Remove touch's as they are now redundant. Add check 
+#      for .bash* cats (we do only want to do them once). softlinks for rerw and rero.
+#      Remove /ro/home/pi templates. 
 
 rorpitar=rorpi-ro-setup.0.0.3.tar.gz
 TEMP=""
@@ -42,8 +42,8 @@ backup_file () {
 STRING="Script begin..."
 echo $STRING
 
-# check if we are running on a raspberry pi, if so assume
-# it's okay to continue, if not Panic!
+# We don't want any accidents so we'll check if we are running on a raspberry pi
+# and if so assume it's okay to continue, if not we Panic! 
 
 grep /boot/issue.txt -e Raspberry > /dev/null 2>&1
 if (( $? != "0" ))
