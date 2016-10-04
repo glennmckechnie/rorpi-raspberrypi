@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Original script kindly contributed by ssinfod.
+# Many thanks for kick starting this, it was long overdue (and uncovered
+# quite a few typos in the process)
+#
 # Reference:
 # https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-readonly
 #
@@ -7,13 +12,16 @@
 #       If we execute it more than once, then we should verify the content of: '.bash_logout' and '.bashrc' for root and pi user.
 #         
 # Version
-#  0.1.1: initial version
-# 0.2: (was 0.1.2) introduce system check (run only on a raspberry pi only). Add stop file
+# 0.1.1: initial version. Kindly contributed by ssinfod
+# 0.02: (was 0.1.2) introduce system check (run only on a raspberry pi only). Add stop file
 #      so we can only run this once. Fix resolvconf confusion. Copy crontab rather than create
 #      (due to group and permission issues). Remove touch's as they are now redundant. Add check 
 #      for .bash* cats (we do only want to do them once). softlinks for rerw and rero.
-#      Remove /ro/home/pi templates.
-# Version 0.02
+#      Remove /ro/home/pi templates. Checked with the assistance of ssinfod
+# 0.03: (was 0.1.3) make use of mkdir -p to simplify process. Add weewx/NOAA directory. Checked
+#      with the assistance of ssinfod
+# Version 0.03
+
 
 rorpitar=rorpi-ro-setup.0.0.3.tar.gz
 TEMP=""
@@ -43,8 +51,8 @@ backup_file () {
 STRING="Script begin..."
 echo $STRING
 
-# We don't want any accidents so we'll check if we are running on a raspberry pi
-# and if so assume it's okay to continue, if not we Panic! 
+# check if we are running on a raspberry pi, if so assume
+# it's okay to continue, if not Panic!
 
 grep /boot/issue.txt -e Raspberry > /dev/null 2>&1
 if (( $? != "0" ))
@@ -101,42 +109,26 @@ backup_file '/etc/init.d/checkroot-bootclean.sh'
 #Create directories
 mkdir /etc/lighttpd
 mkdir /lib/voyage-utils
-mkdir /ro/
-mkdir /ro/home
-mkdir /ro/home/pi
-mkdir /ro/var
-mkdir /ro/var/cache
-mkdir /ro/var/cache/unbound
-mkdir /ro/var/lib
-mkdir /ro/var/lib/dhcp
+mkdir -p /ro/home/pi
+mkdir -p /ro/var/cache/unbound
+mkdir -p /ro/var/lib/dhcp
 mkdir /ro/var/lib/dhcpcd5 # (even though it's obvious if you read the actual script)
 mkdir /ro/var/lib/logrotate
 mkdir /ro/var/lib/ntp
-mkdir /ro/var/spool
-mkdir /ro/var/spool/cron
-#mkdir /ro/var/spool/cron/crontabs # copy this instead
+mkdir -p /ro/var/spool/cron
 mkdir /ro/var/spool/rsyslog
-mkdir /ro/var/www
-mkdir /ro/var/www/html
-mkdir /ro/var/www/html/weewx
-mkdir /var/www       # if lighttpd is not installed
-mkdir /var/www/html  # if lighttpd is not installed
+mkdir -p /var/www/html/weewx/NOAA  # if lighttpd is not installed
 
 # Create tmp directories. (needed for the symlink below)
 # Note: See also below for chown on ntp folder.
-mkdir /tmp/var
-mkdir /tmp/var/cache
-mkdir /tmp/var/cache/unbound
-mkdir /tmp/var/lib
-mkdir /tmp/var/lib/dhcp
+mkdir -p /tmp/var/cache/unbound
+mkdir -p /tmp/var/lib/dhcp
 mkdir /tmp/var/lib/dhcpcd5
 mkdir /tmp/var/lib/logrotate
 mkdir /tmp/var/lib/ntp
-mkdir /tmp/var/spool
-mkdir /tmp/var/spool/cron
+mkdir -p /tmp/var/spool/cron
 mkdir /tmp/var/spool/rsyslog
-mkdir /tmp/var/www
-mkdir /tmp/var/www/html
+mkdir -p /tmp/var/www/html/weeewx/NOAA
 
 #We assign 'rorpi-ro-setup' in FOLDER because of the 'tar -xyz' made above.
 FOLDER='rorpi-ro-setup'
@@ -150,15 +142,12 @@ cp ./$FOLDER/etc/fstab.rorpi /etc/fstab
 cp ./$FOLDER/etc/inittab.rorpi /etc/inittab
 cp ./$FOLDER/etc/motd.rorpi /etc/motd
 cp ./$FOLDER/etc/ntp.conf.rorpi /etc/ntp.conf
-#cp ./$FOLDER/etc/resolv.conf.rorpi /run/resolv.conf            # which one is it ??
-#cp ./$FOLDER/etc/resolv.conf.rorpi /run/resolvconf/resolv.conf # which one is it ??
-# probably neither
 cp ./$FOLDER/etc/default/tmpfs.rorpi /etc/default/tmpfs
 cp ./$FOLDER/etc/default/voyage-util /etc/default/voyage-util
 cp ./$FOLDER/etc/init.d/checkroot-bootclean.sh.rorpi /etc/init.d/checkroot-bootclean.sh
 cp ./$FOLDER/etc/init.d/voyage-sync /etc/init.d/voyage-sync
 cp ./$FOLDER/etc/lighttpd/lighttpd.conf.rorpi /etc/lighttpd/lighttpd.conf
-cp -Rp ./$FOLDER/ro/var/spool/cron/crontabs /ro/var/spool/cron/crontabs # copied rather than created
+cp -Rp ./$FOLDER/ro/var/spool/cron/crontabs /ro/var/spool/cron/crontabs # copied rather than created tp preserve group and permissions
 
 
 #Create link1 (soft?)
