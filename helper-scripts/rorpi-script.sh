@@ -50,7 +50,8 @@ check_version()
    then
      cp "/tmp/$tempfile" "/tmp/rorpi-script-$hubversion-$tempfile.sh"
      echo " "An updated rorpi-script.sh "(Version $hubversion)" is available on github.
-     echo " "It is also available here at /tmp/rorpi-script-"$hubversion"-$tempfile.sh
+     echo " "It is also available here at /tmp/rorpi-script-"$hubversion"-"$tempfile".sh
+     echo "      "bash /tmp/rorpi-script-"$hubversion"-"$tempfile".sh
      echo " "It is strongly suggested to replace this script "(Version $thisversion)" and use it instead.
      echo "   "cp /tmp/rorpi-script-"$hubversion"-"$tempfile".sh "$0"
    exit 0
@@ -146,7 +147,7 @@ backup_file '/etc/init.d/checkroot-bootclean.sh'
 
 
 #Create directories
-echo -e "\t Creating directories"
+echo -e "\tCreating directories"
 mkdir /etc/lighttpd
 mkdir /lib/voyage-utils
 mkdir -p /ro/home/pi
@@ -227,7 +228,7 @@ else
 fi
 
 #Copy the other files to folder
-echo -e "\t Copying remaining files, helper scripts"
+echo -e "\tCopying remaining files, helper scripts"
 cp ./$FOLDER/lib/voyage-utils/100-rpi /lib/voyage-utils/
 
 #Helper scripts to remount
