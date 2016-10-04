@@ -15,21 +15,22 @@
 # Version
 # 0.1.1: initial version. Kindly contributed by ssinfod
 # 0.02: (was 0.1.2) introduce system check (run only on a raspberry pi only). Add stop file
-#      so we can only run this once. Fix resolvconf confusion. Copy crontab rather than create
-#      (due to group and permission issues). Remove touch's as they are now redundant. Add check
-#      for .bash* cats (we do only want to do them once). Softlinks for rerw and rero.
-#      Remove /ro/home/pi templates. Checked with the assistance of ssinfod
+#       so we can only run this once. Fix resolvconf confusion. Copy crontab rather than create
+#       (due to group and permission issues). Remove touch's as they are now redundant. Add check
+#       for .bash* cats (we do only want to do them once). Softlinks for rerw and rero.
+#       Remove /ro/home/pi templates. Checked with the assistance of ssinfod
 # 0.03: (was 0.1.3) make use of mkdir -p to simplify process. Add weewx/NOAA directory. Checked
-#      with the assistance of ssinfod
+#       with the assistance of ssinfod
 # 0.04: introduce version self check. Reinstate /ro/home/pi/*.rorpi as templates for /home/pi. 
-#      Add feedback messages. Remove pi/.bash* templates from /ro area (not needed as we use /home/pi)
+#       Add feedback messages. Remove pi/.bash* templates from /ro area (not needed as we use /home/pi)
+# 0.05: Add full path to aliases. Include helper-scripts directory. Simplify version number
 
-# Version 0.04
+# Version 0.05
 
 
-rorpitar_version=04 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=05 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
-rorpitar=rorpi-ro-setup.0.0."$rorpitar_version".tar.gz
+rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
 FOLDER=""
 
