@@ -2,8 +2,9 @@
 #
 # Version
 # 0.06: initial upload - numbering syncs with rorpi-readonly.sh script
+# 0.07: call check function
 #
-# Version 0.06
+# Version 0.07
 
 weewx_version="weewx_3.5.0-1_all.deb"
 
@@ -34,7 +35,9 @@ check_version()
    fi
 }
 
-cd /root # we should be there already - but...
+check_version
+
+cd /root # Yes, we should be there already - but...
 
 if [ ! -f /root/remove_systemd ]
 then 
@@ -61,7 +64,7 @@ else
  echo -e "\n\tContinuing installation, updating  process\n"
 fi
 
-cd /root # we should be there already - but...
+cd /root # and we still should be there already - but...
  rm -f /root/remove_systemd
 
 apt-get remove --purge --auto-remove systemd
