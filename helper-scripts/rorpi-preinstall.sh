@@ -117,7 +117,7 @@ case $1 in
            apt-get $apt_optn -f install
 
            # add html to first ' HTML_ROOT' encountered, this matches with lighttpd's config
-           sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/weewx\/html # added by rorpi-preinstall/' /etc/weewx/weewx.conf
+           sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/html\/weewx/ # added by rorpi-preinstall/' /etc/weewx/weewx.conf
         ;;
 esac
 
