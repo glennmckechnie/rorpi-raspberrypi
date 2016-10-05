@@ -2,11 +2,15 @@
 #
 # Version
 # 0.06: initial upload - numbering syncs with rorpi-readonly.sh script
-# 0.07: call check function
+# 0.07: call check_version function, add a skip weewx option
 #
 # Version 0.07
 
 weewx_version="weewx_3.5.0-1_all.deb"
+
+echo -e "\nIf you do not wish to install weewx then add 'noweewx'"
+echo -e "\n ie:- $0 noweewx\n"
+sleep 2
 
 check_version()
 {
@@ -35,11 +39,25 @@ check_version()
    fi
 }
 
+
 check_version
 
 cd /root # Yes, we should be there already - but...
 
-if [ ! -f /root/remove_systemd ]
+if [ ! -f /root/remove_systemd ]call_usage(){
+if [ $# -ne 2 ]
+then
+    echo -e "\n\\033[35m Usage: $0 <device> <imagefile>\\033[0;39m"
+    echo -e "\neg:- $0 /dev/sde voyage-mubox-4.img"
+    echo -e "A script to write, read, and confirm image files (*.img)to disk"
+    echo -e "cd to location of the image file to be written. Then, run this script"
+    echo -e "and pay attention to the questions it may ask, or response it gives"
+    echo -e "It attempts to save your butt, but it can't think... thankfully we can.\n"
+        exit 1
+fi
+
+}
+
 then 
  echo -e "\n\tRunning apt-get update and dist-upgrade\n"
  apt-get update
@@ -84,16 +102,23 @@ samba-libs squeak-plugins-scratch squeak-vm supercollider
 
 apt-get -f install # while that shouldn't be required.
 
-echo -e "\n\tremoving apt-get targeted applications - autoremove\n"
+echo -e "\n\tRemoving apt-get targeted applications - autoremove\n"
 apt-get autoremove # this will
 
-echo -e "\n\tFetching and Installing weewx\n"
-wget http://weewx.com/downloads/$weewx_version
-sudo dpkg -i $weewx_version
+case $1 in
+	noweewx)
+	echo -e "\t\nNOT installing weewx\n"
+	;;
+	*)
+           echo -e "\n\tFetching and Installing weewx\n"
+           wget http://weewx.com/downloads/$weewx_version
+           sudo dpkg -i $weewx_version
 
-echo -e "\n\tCompleting weewx installation\n"
-apt-get update
-apt-get -f install
+           echo -e "\n\tCompleting weewx installation\n"
+           apt-get update
+           apt-get -f install
+	;;
+esac
 
 echo -e "\n\tInstallation has been completed. Check your weewx installation is working"
 echo -e "\tand then continue with the read only installation steps (or use the"
