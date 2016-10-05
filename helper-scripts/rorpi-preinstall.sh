@@ -26,7 +26,7 @@ check_version()
      $(cp /tmp/"$tempfile" /root/rorpi-preinstall."$hubversion".sh)
      echo " "An updated rorpi-preinstall.sh "(Version $hubversion)" is available on github.
      echo " "It is also available here at /root/rorpi-preinstall-newest.sh
-     echo "      "bash /root/rorpi-preinstall-newest.sh
+     echo "      "bash /root/rorpi-preinstall."$hubversion".sh
      echo " "It is strongly suggested to use this newer version instead.
    exit 0
    else
