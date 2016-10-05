@@ -26,11 +26,12 @@
 # 0.05: Add full path to aliases. Include helper-scripts directory. Simplify version number
 # 0.06: Change script name to rorpi-readonly.sh pre introduction of new script.
 #       rorpi-preinstall.sh now available for preliminary steps.
+# 0.07: Consolidate name change
 
-# Version 0.06
+# Version 0.07
 
 
-rorpitar_version=06 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=07 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
