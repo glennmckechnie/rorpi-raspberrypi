@@ -51,7 +51,7 @@ check_version()
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
    then
-     $(cp /tmp/$tempfile" "/root/rorpi-readonly."$hubversion".sh)
+     $(cp /tmp/"$tempfile" /root/rorpi-readonly."$hubversion".sh)
      echo " "An updated rorpi-readonly.sh "(Version $hubversion)" is available on github.
      echo " "It is now available here at /root/rorpi-readonly."$hubversion".sh
      echo "      "bash /root/rorpi-readonly-"$hubversion".sh
