@@ -81,7 +81,7 @@ fi
 cd /root # and we still should be there already - but...
  rm -f /root/remove_systemd
 
-apt-get remove --purge --auto-remove systemd
+apt-get $apt_optn remove --purge --auto-remove systemd
 
 apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitail gdisk vim-gtk ssmtp iotop sysstat lsof
 
@@ -89,7 +89,7 @@ apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitai
 #apt-get $apt_optn install iotop sysstat lsof # stress-ng if you want to "test" the install??
 
 echo -e "\n\tPurging fake -hwclock\n"
-apt-get purge fake-hwclock
+apt-get $apt_optn purge fake-hwclock
 
 apt-get purge wolfram-engine desktop-base lightdm lxappearance lxde-common\
 lxde-icon-theme lxinput lxpanel lxrandr  lxtask lxterminal triggerhappy\
@@ -111,7 +111,7 @@ case $1 in
            sudo dpkg -i $weewx_version
 
            echo -e "\n\tCompleting weewx installation\n"
-           apt-get $apt_optn update
+           # apt-get $apt_optn update # ignoring as we've only just done an update.
            apt-get $apt_optn -f install
 	;;
 esac
