@@ -104,23 +104,27 @@ echo -e "\n\tRemoving apt-get targeted applications - autoremove\n"
 apt-get autoremove # this will
 
 case $1 in
-	noweewx)
-	echo -e "\t\nNOT installing weewx\n"
-	;;
-	*)
+        noweewx)
+        echo -e "\t\nNOT installing weewx\n"
+        ;;
+        *)
            echo -e "\n\tFetching and Installing weewx\n"
            wget http://weewx.com/downloads/$weewx_version
            sudo dpkg -i $weewx_version
-	   # add html to first ' HTML_ROOT' encountered, this matches with lighttpd's config
-	   sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/weewx\/html # added by rorpi-preinstall/' /etc/weewx/weewx.conf
 
            echo -e "\n\tCompleting weewx installation\n"
            # apt-get $apt_optn update # ignoring as we've only just done an update.
            apt-get $apt_optn -f install
-	;;
+
+           # add html to first ' HTML_ROOT' encountered, this matches with lighttpd's config
+           sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/weewx\/html # added by rorpi-preinstall/' /etc/weewx/weewx.conf
+        ;;
 esac
 
-echo -e "\n\tInstallation has been completed. Check your weewx installation is working"
-echo -e "\tand then continue with the read only installation steps (or use the"
+# running mc now to set up directories and stop it complaining when we become read only
+mc
+
+echo -e "\n\tRaspbian installation has been updated. Also check your weewx installation is"
+echo -e "\tworking and then continue with the read only installation steps (or use the"
 echo -e "\trorpi-readonly.sh script)\n"
 
