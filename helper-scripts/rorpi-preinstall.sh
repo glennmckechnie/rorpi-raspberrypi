@@ -1,10 +1,20 @@
 #!/bin/bash
 #
-# Version
+# Script used in conjunction with https://github.com/glennmckechnie/rorpi-raspberrypi
+# to install the prerequisites for a rorpi installation - read only root pi
+#
+# Author: glenn.mckechnie@gmail.com
+#
+# Versions
 # 0.06: initial upload - numbering syncs with rorpi-readonly.sh script
 # 0.07: call check_version function, add a skip weewx option
+# 0.08: ad variable to allow apt-get options  '-y' in particular
 #
-# Version 0.07
+# Version 0.08
+
+# apt-get provides an option to say yes to installation targets by using the -y string
+# set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
+apt_optn=""
 
 weewx_version="weewx_3.5.0-1_all.deb"
 
@@ -23,7 +33,7 @@ check_version()
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
    then
-     $(cp /tmp/"$tempfile" /root/rorpi-preinstall."$hubversion".sh)
+     cp /tmp/"$tempfile" /root/rorpi-preinstall."$hubversion".sh
      echo " "An updated rorpi-preinstall.sh "(Version $hubversion)" is available on github.
      echo " "It is also available here at /root/rorpi-preinstall-newest.sh
      echo "      "bash /root/rorpi-preinstall."$hubversion".sh
@@ -47,13 +57,13 @@ if [ ! -f /root/remove_systemd ]
 then 
  echo -e "\n\tRunning apt-get update and dist-upgrade\n"
  apt-get update
- apt-get dist-upgrade
+ apt-get $apt_optn dist-upgrade
 
   raspi-config
 
  echo -e "\n\tInstalling sysvinit"
 
- apt-get install sysvinit-core sysvinit-utils
+ apt-get $apt_optn install sysvinit-core sysvinit-utils
 
  echo -e "\n\tWe need to reboot to remove systemd"
  echo -e "\n\tWaiting 6 seconds before rebooting"
@@ -73,10 +83,10 @@ cd /root # and we still should be there already - but...
 
 apt-get remove --purge --auto-remove systemd
 
-apt-get install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitail gdisk vim-gtk ssmtp iotop sysstat lsof
+apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitail gdisk vim-gtk ssmtp iotop sysstat lsof
 
-#apt-get install  ssmtp # optional
-#apt-get install iotop sysstat lsof # stress-ng if you want to "test" the install??
+#apt-get $apt_optn install  ssmtp # optional
+#apt-get $apt_optn install iotop sysstat lsof # stress-ng if you want to "test" the install??
 
 echo -e "\n\tPurging fake -hwclock\n"
 apt-get purge fake-hwclock
@@ -86,7 +96,7 @@ lxde-icon-theme lxinput lxpanel lxrandr  lxtask lxterminal triggerhappy\
 libreoffice-core libreoffice-common libreoffice-style-galaxy samba-common\
 samba-libs squeak-plugins-scratch squeak-vm supercollider
 
-apt-get -f install # while that shouldn't be required.
+apt-get $apt_optn -f install # while that shouldn't be required.
 
 echo -e "\n\tRemoving apt-get targeted applications - autoremove\n"
 apt-get autoremove # this will
@@ -101,8 +111,8 @@ case $1 in
            sudo dpkg -i $weewx_version
 
            echo -e "\n\tCompleting weewx installation\n"
-           apt-get update
-           apt-get -f install
+           apt-get $apt_optn update
+           apt-get $apt_optn -f install
 	;;
 esac
 
