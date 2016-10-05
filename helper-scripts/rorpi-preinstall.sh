@@ -8,9 +8,10 @@
 # Versions
 # 0.06: initial upload - numbering syncs with rorpi-readonly.sh script
 # 0.07: call check_version function, add a skip weewx option
-# 0.08: ad variable to allow apt-get options  '-y' in particular
+# 0.08: add variable to allow apt-get options  '-y' in particular
+# 0.09: reposition raspi-config, auto replace weewx path in weewx.conf
 #
-# Version 0.08
+# Version 0.09
 
 # apt-get provides an option to say yes to installation targets by using the -y string
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
@@ -53,13 +54,14 @@ check_version
 
 cd /root # Yes, we should be there already - but...
 
+# do this first as it requires user input and we might have set -y for apt-get
+  raspi-config
+
 if [ ! -f /root/remove_systemd ]
 then 
  echo -e "\n\tRunning apt-get update and dist-upgrade\n"
  apt-get update
  apt-get $apt_optn dist-upgrade
-
-  raspi-config
 
  echo -e "\n\tInstalling sysvinit"
 
@@ -109,6 +111,8 @@ case $1 in
            echo -e "\n\tFetching and Installing weewx\n"
            wget http://weewx.com/downloads/$weewx_version
            sudo dpkg -i $weewx_version
+	   # add html to first ' HTML_ROOT' encountered, this matches with lighttpd's config
+	   sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/weewx\/html # added by rorpi-preinstall/' /etc/weewx/weewx.conf
 
            echo -e "\n\tCompleting weewx installation\n"
            # apt-get $apt_optn update # ignoring as we've only just done an update.

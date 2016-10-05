@@ -27,11 +27,12 @@
 # 0.06: Change script name to rorpi-readonly.sh pre introduction of new script.
 #       rorpi-preinstall.sh now available for preliminary steps.
 # 0.07: Consolidate name change
+# 0.08: Fix creation of www directory
 
-# Version 0.07
+# Version 0.08
 
 
-rorpitar_version=07 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=08 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
@@ -51,12 +52,12 @@ check_version()
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
    then
-     $(cp /tmp/"$tempfile" /root/rorpi-readonly."$hubversion".sh)
+     cp /tmp/"$tempfile" /root/rorpi-readonly."$hubversion".sh
      echo " "An updated rorpi-readonly.sh "(Version $hubversion)" is available on github.
      echo " "It is now available here at /root/rorpi-readonly."$hubversion".sh
      echo "      "bash /root/rorpi-readonly-"$hubversion".sh
      echo " "It is strongly suggested to use this newer version instead.
-     
+
    exit 0
    else
      echo "script version on github is $hubversion"
@@ -161,7 +162,7 @@ mkdir /ro/var/lib/logrotate
 mkdir /ro/var/lib/ntp
 mkdir -p /ro/var/spool/cron
 mkdir /ro/var/spool/rsyslog
-mkdir -p /var/www/html/weewx/NOAA  # if lighttpd is not installed
+mkdir -p /ro/var/www/html/weewx/NOAA  # if lighttpd is not installed
 
 # Create tmp directories. (needed for the symlink below)
 # Note: See also below for chown on ntp folder.
