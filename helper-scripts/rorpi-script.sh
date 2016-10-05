@@ -55,10 +55,11 @@ check_version()
      echo " "This script will be renamed from rorpi-script.sh to rorpi-readonly.sh
      echo
      echo " "An updated rorpi-readonly.sh "(Version $hubversion)" is available on github.
-     echo " "It is also available here at /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh
-     echo "      "bash /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh
-     echo " "It is strongly suggested to replace this script "(Version $thisversion)" and use it instead.
-     echo "   "cp /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh "$0"
+     echo " "It is now available here at /root/rorpi-readonly-newest.sh
+     echo "      "bash  /root/rorpi-readonly-newest.sh
+     echo " "It is strongly suggested to use this newer version instead.
+     $(cp /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh /root/rorpi-readonly-newest.sh)
+
    exit 0
    else
      echo "script version on github is $hubversion"
