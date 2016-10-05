@@ -174,7 +174,7 @@ mkdir /tmp/var/lib/logrotate
 mkdir /tmp/var/lib/ntp
 mkdir -p /tmp/var/spool/cron
 mkdir /tmp/var/spool/rsyslog
-mkdir -p /tmp/var/www/html/weeewx/NOAA
+mkdir -p /tmp/var/www/html/weewx/NOAA
 
 #We assign 'rorpi-ro-setup' in FOLDER because of the 'tar -xyz' made above.
 FOLDER='rorpi-ro-setup'
