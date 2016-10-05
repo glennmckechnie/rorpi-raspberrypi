@@ -50,15 +50,14 @@ check_version()
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
    then
-     cp "/tmp/$tempfile" "/tmp/rorpi-readonly-$hubversion-$tempfile.sh"
+     cp "/tmp/$tempfile" "/root/rorpi-readonly-$hubversion.sh"
      echo
-     echo " "This script will be renamed from rorpi-script.sh to rorpi-readonly.sh
+     echo " "This script has been renamed from rorpi-script.sh to rorpi-readonly.sh
      echo
      echo " "An updated rorpi-readonly.sh "(Version $hubversion)" is available on github.
-     echo " "It is now available here at /root/rorpi-readonly-newest.sh
-     echo "      "bash  /root/rorpi-readonly-newest.sh
+     echo " "It is now available here at /root/rorpi-readonly-"$hubversion".sh
+     echo "      "bash  /root/rorpi-readonly-"$hubversion".sh
      echo " "It is strongly suggested to use this newer version instead.
-     $(cp /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh /root/rorpi-readonly-newest.sh)
 
    exit 0
    else
