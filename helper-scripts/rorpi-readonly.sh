@@ -28,11 +28,12 @@
 #       rorpi-preinstall.sh now available for preliminary steps.
 # 0.07: Consolidate name change
 # 0.08: Fix creation of www directory
+# 0.09: Add run once logic to check_version. Remove errant paste
+#
+# Version 0.09
 
-# Version 0.08
 
-
-rorpitar_version=08 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=09 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
@@ -50,6 +51,8 @@ check_version()
   hubversion=$(grep /tmp/$tempfile -e '^# Version ' | awk -F " " '{print $3}')
   thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
+   # limit this to one check per session - that should be more than enough!
+   touch /tmp/check_readonly
    if [[ "$winner" < $hubversion ]]
    then
      cp /tmp/"$tempfile" /root/rorpi-readonly."$hubversion".sh
@@ -105,8 +108,13 @@ if [ "$(id -u)" != "0" ]; then
    exit 1 # exit with error
 fi
 
-# comment the next line if you really want to stick to this version
+# run the check once only - the second run is probably redundant
+
+if [ ! -f /tmp/check_readonly ]
+then
 check_version
+fi
+
 
 # Finally! Start the actual script.
 

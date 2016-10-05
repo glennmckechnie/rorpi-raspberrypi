@@ -10,8 +10,10 @@
 # 0.07: call check_version function, add a skip weewx option
 # 0.08: add variable to allow apt-get options  '-y' in particular
 # 0.09: reposition raspi-config, auto replace weewx path in weewx.conf
+# 0.10: Add run once logic to check_version. move raspi-config to start first.
+#       Fix sed PATH alteration
 #
-# Version 0.09
+# Version 0.10
 
 # apt-get provides an option to say yes to installation targets by using the -y string
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
@@ -32,6 +34,8 @@ check_version()
   hubversion=$(grep /tmp/$tempfile -e '^# Version ' | awk -F " " '{print $3}')
   thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
+   # limit this to one check per session - that should be more than enough!
+   touch /tmp/check_preinstall
    if [[ "$winner" < $hubversion ]]
    then
      cp /tmp/"$tempfile" /root/rorpi-preinstall."$hubversion".sh
@@ -49,16 +53,22 @@ check_version()
    fi
 }
 
+# run the check once only - the second run is probably redundant
 
+if [ ! -f /tmp/check_preinstall ]
+then
 check_version
+fi
 
 cd /root # Yes, we should be there already - but...
 
-# do this first as it requires user input and we might have set -y for apt-get
-  raspi-config
 
 if [ ! -f /root/remove_systemd ]
 then 
+# do this first as it requires user input and we might have set -y
+# for apt-get, also do it only once
+  raspi-config
+
  echo -e "\n\tRunning apt-get update and dist-upgrade\n"
  apt-get update
  apt-get $apt_optn dist-upgrade
@@ -117,7 +127,7 @@ case $1 in
            apt-get $apt_optn -f install
 
            # add html to first ' HTML_ROOT' encountered, this matches with lighttpd's config
-           sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/html\/weewx/ # added by rorpi-preinstall/' /etc/weewx/weewx.conf
+           sed -i '/ HTML_ROOT/ s/ \/var\/www\/weewx/ \/var\/www\/html\/weewx # added by rorpi-preinstall/' /etc/weewx/weewx.conf
         ;;
 esac
 
