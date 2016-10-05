@@ -24,11 +24,13 @@
 # 0.04: introduce version self check. Reinstate /ro/home/pi/*.rorpi as templates for /home/pi. 
 #       Add feedback messages. Remove pi/.bash* templates from /ro area (not needed as we use /home/pi)
 # 0.05: Add full path to aliases. Include helper-scripts directory. Simplify version number
+# 0.06: Change script name to rorpi-readonly.sh pre introduction of new script.
+#       rorpi-preinstall.sh now available for preliminary steps.
 
-# Version 0.05
+# Version 0.06
 
 
-rorpitar_version=05 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=06 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
@@ -41,19 +43,22 @@ check_version()
 {
   # http://fitnr.com/bash-comparing-version-strings.html used as template.
   tempfile=$RANDOM
-  wget -O /tmp/$tempfile https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/helper-scripts/rorpi-script.sh
+  wget -O /tmp/$tempfile https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/helper-scripts/rorpi-readonly.sh
 
   hubversion=$(grep /tmp/$tempfile -e '^# Version ' | awk -F " " '{print $3}')
   thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
    then
-     cp "/tmp/$tempfile" "/tmp/rorpi-script-$hubversion-$tempfile.sh"
-     echo " "An updated rorpi-script.sh "(Version $hubversion)" is available on github.
-     echo " "It is also available here at /tmp/rorpi-script-"$hubversion"-"$tempfile".sh
-     echo "      "bash /tmp/rorpi-script-"$hubversion"-"$tempfile".sh
+     cp "/tmp/$tempfile" "/tmp/rorpi-readonly-$hubversion-$tempfile.sh"
+     echo
+     echo " "This script will be renamed from rorpi-script.sh to rorpi-readonly.sh
+     echo
+     echo " "An updated rorpi-readonly.sh "(Version $hubversion)" is available on github.
+     echo " "It is also available here at /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh
+     echo "      "bash /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh
      echo " "It is strongly suggested to replace this script "(Version $thisversion)" and use it instead.
-     echo "   "cp /tmp/rorpi-script-"$hubversion"-"$tempfile".sh "$0"
+     echo "   "cp /tmp/rorpi-readonly-"$hubversion"-"$tempfile".sh "$0"
    exit 0
    else
      echo "script version on github is $hubversion"
@@ -71,9 +76,9 @@ backup_file () {
 
     if [ -f $FILE2 ];
     then
-        echo "SKIP. (File $FILE2 exists)"
+        echo "SKIP. (File $FILE2 exists, ignoring backup)"
     else
-        echo "BACK. (File $FILE2 does not exist)"
+        echo "BACK. (File $FILE2 did not exist, now copying)"
         cp $FILE1 $FILE2
     fi
 }
