@@ -272,11 +272,11 @@ cd /var/lib
 chown ntp.ntp ntp
 
 #init script and swap
-echo -e "\tRun update-rc.d to enable voyage-sync" 
+echo -e "\tRunning update-rc.d to enable voyage-sync" 
 update-rc.d voyage-sync defaults
 update-rc.d  dphys-swapfile disable
 
-echo -e "\tCreate lock file to prevent this script running again"
+echo -e "\tCreating lock file to prevent this script running again"
 touch /root/rorpi-ro-setup/done-once-already
 ls -al /root/rorpi-ro-setup/done-once-already
 
