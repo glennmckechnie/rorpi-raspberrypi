@@ -44,20 +44,7 @@ check_version
 
 cd /root # Yes, we should be there already - but...
 
-if [ ! -f /root/remove_systemd ]call_usage(){
-if [ $# -ne 2 ]
-then
-    echo -e "\n\\033[35m Usage: $0 <device> <imagefile>\\033[0;39m"
-    echo -e "\neg:- $0 /dev/sde voyage-mubox-4.img"
-    echo -e "A script to write, read, and confirm image files (*.img)to disk"
-    echo -e "cd to location of the image file to be written. Then, run this script"
-    echo -e "and pay attention to the questions it may ask, or response it gives"
-    echo -e "It attempts to save your butt, but it can't think... thankfully we can.\n"
-        exit 1
-fi
-
-}
-
+if [ ! -f /root/remove_systemd ]
 then 
  echo -e "\n\tRunning apt-get update and dist-upgrade\n"
  apt-get update
