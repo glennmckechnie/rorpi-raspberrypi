@@ -23,12 +23,11 @@ check_version()
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    if [[ "$winner" < $hubversion ]]
    then
-     cp "/tmp/$tempfile" "/tmp/rorpi-preinstall-$hubversion-$tempfile.sh"
+     $(cp /tmp/"$tempfile" /root/rorpi-preinstall."$hubversion".sh)
      echo " "An updated rorpi-preinstall.sh "(Version $hubversion)" is available on github.
-     echo " "It is also available here at /tmp/rorpi-preinstall-"$hubversion"-"$tempfile".sh
-     echo "      "bash /tmp/rorpi-preinstall-"$hubversion"-"$tempfile".sh
-     echo " "It is strongly suggested to replace this script "(Version $thisversion)" and use it instead.
-     echo "   "cp /tmp/rorpi-preinstall-"$hubversion"-"$tempfile".sh "$0"
+     echo " "It is also available here at /root/rorpi-preinstall-newest.sh
+     echo "      "bash /root/rorpi-preinstall-newest.sh
+     echo " "It is strongly suggested to use this newer version instead.
    exit 0
    else
      echo "script version on github is $hubversion"
