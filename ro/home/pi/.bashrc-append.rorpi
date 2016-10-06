@@ -8,8 +8,8 @@
 # additions to ~/.bashrc for ropi management
 
 alias spl='dpkg --get-selections > ~/`date '+%Y%m%d%H%M'`-`hostname`-package-selections'
-alias rero="remountro"
-alias rerw="remountrw"
+alias rero="sudo remountro" # sudo added as this same script is used to populate /etc/skel and pi user
+alias rerw="sudo remountrw"
 
 
 # Display drive state on command line
