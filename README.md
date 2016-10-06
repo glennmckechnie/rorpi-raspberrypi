@@ -27,9 +27,9 @@ In addition there is also a script *sdcard_write_read_confirm.sh* to help with t
 
 * Running *sdcard_write_read_confirm.sh* will assist with the image transfer to the SDCard (providing you are on a Linux machine). Or you can follow the manual instructions available where you got the image. **bash sdcard_write_read_confirm.sh** will display usage notes.
 
-* Running *rorpi-preinstall.sh* will give you an updated version of Raspian with the added bonus of a Weewx install. (You can edit that script and perform an automatic apt-get install, effectively answering yes to all questions, by changing  *apt_optn=""* to *apt_optn="-y"*  The script also accepts the option 'noweewx' - **bash rorpi-preinstall.sh noweewx** - if you wish to skip that step)
+* Running *rorpi-preinstall.sh* will give you an updated version of Raspian with the added bonus of a Weewx install. (You can edit that script and perform an automatic apt-get install, effectively answering yes to all questions, by changing  *apt_optn=""* to *apt_optn="-y"*  The script can be run by entering **bash rorpi-preinstall.sh**, it also accepts the option 'noweewx' - if you wish to skip that step)
 
-* Following that with the *rorpi-readonly.sh* script will quickly perform the read only root installation on the SDCard.
+* Following that with the *rorpi-readonly.sh* script, run as **bash rorpi-readonly.sh** will quickly perform the read only root installation on the SDCard.
 
 If you use the above scripts, read the wiki notes at least once as they describe what's happening, or happened!
 
