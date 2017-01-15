@@ -119,7 +119,7 @@ case $1 in
         *)
            echo -e "\n\tSetting up the local apt repository with weewx\n"
            curl -s http://weewx.com/keys.html | sudo apt-key add -
-           echo -e "deb [arch=all] http://weewx.com/apt/ squeeze main" | sudo tee /etc/apt/sources.list.d/weewx.list
+           echo "deb [arch=all] http://weewx.com/apt/ squeeze main" | sudo tee /etc/apt/sources.list.d/weewx.list
 
            echo -e "\n\tFetching and Installing weewx\n"
            sudo apt-get update
