@@ -13,16 +13,26 @@
 # 0.10: Add run once logic to check_version. move raspi-config to start first.
 #       Fix sed PATH alteration
 # 0.11: Use the weewx apt repository.
+# 0.12: Add an option to retain systemd. !! Work in progress - breakages may occur !!
 #
-# Version 0.11
+# Version 0.12
 
 # apt-get provides an option to say yes to installation targets by using the -y string
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
 apt_optn=""
 
+# Currently, the default initmethod is to remove systemd, adjust the following to suit your needs.
+#initmethod="sysv"
+#initmethod="systemd" 
+initmethod="sysv"
+
 echo -e "\nIf you do not wish to install weewx with this script then add 'noweewx'"
 echo -e "\n ie:- $0 noweewx\n"
 sleep 2
+echo -e "\nIf you want to retain systemd, and you're willing to test the result."
+echo -e "\nThen edit  the 'initmethod' variable within this script"
+echo -e "\nie:uncomment #initmethod=systemd"
+sleep 4
 
 check_version()
 {
@@ -62,7 +72,7 @@ fi
 cd /root # Yes, we should be there already - but...
 
 
-if [ ! -f /root/remove_systemd ]
+if [ ! -f /root/initmethod ]
 then 
 # do this first as it requires user input and we might have set -y
 # for apt-get, also do it only once
@@ -72,26 +82,43 @@ then
  apt-get update
  apt-get $apt_optn dist-upgrade
 
- echo -e "\n\tInstalling sysvinit"
+case $initmethod in
+        sysv)
+         echo -e "\n\tInstalling sysvinit"
 
- apt-get $apt_optn install sysvinit-core sysvinit-utils
+         apt-get $apt_optn install sysvinit-core sysvinit-utils
 
- echo -e "\n\tWe need to reboot to remove systemd"
- echo -e "\n\tWaiting 6 seconds before rebooting"
- sleep 2
- echo -e "\n\n\tRun this script again after the reboot\n\n"
- touch /root/remove_systemd
- sleep 4
+         echo -e "\n\tWe need to reboot to remove systemd"
+         echo -e "\n\tWaiting 6 seconds before rebooting"
+         sleep 2
+         echo -e "\n\n\tRun this script again after the reboot\n\n"
+         touch /root/initmethod
+         sleep 4
 
- reboot
- exit 1
+         reboot
+         exit 1
+        ;;
+        systemd)
+         echo -e "\nRetaining systemd as our init method"
+         echo -e "\nnb:- This action is a work in progress"
+         ;;
+esac
 else
  echo -e "\n\tContinuing installation, updating  process\n"
 fi
 
-cd /root # and we still should be there already - but...
- rm -f /root/remove_systemd
+# possibly hitting this after the reboot required to cleanly remove sysV
 
+cd /root # and we still should be there already - but...
+ rm -f /root/initmethod
+ 
+ case $initmethod in
+        sysv)
+        apt-get $apt_optn remove --purge --auto-remove systemd
+        ;;
+esac
+
+# continue
 apt-get $apt_optn remove --purge --auto-remove systemd
 
 apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitail gdisk vim-gtk ssmtp iotop sysstat lsof
