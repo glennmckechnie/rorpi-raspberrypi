@@ -12,16 +12,15 @@
 # 0.09: reposition raspi-config, auto replace weewx path in weewx.conf
 # 0.10: Add run once logic to check_version. move raspi-config to start first.
 #       Fix sed PATH alteration
+# 0.11: Use the weewx apt repository.
 #
-# Version 0.10
+# Version 0.11
 
 # apt-get provides an option to say yes to installation targets by using the -y string
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
 apt_optn=""
 
-weewx_version="weewx_3.5.0-1_all.deb"
-
-echo -e "\nIf you do not wish to install weewx then add 'noweewx'"
+echo -e "\nIf you do not wish to install weewx with this script then add 'noweewx'"
 echo -e "\n ie:- $0 noweewx\n"
 sleep 2
 
@@ -103,9 +102,9 @@ apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitai
 echo -e "\n\tPurging fake -hwclock\n"
 apt-get $apt_optn purge fake-hwclock
 
-apt-get purge wolfram-engine desktop-base lightdm lxappearance lxde-common\
-lxde-icon-theme lxinput lxpanel lxrandr  lxtask lxterminal triggerhappy\
-libreoffice-core libreoffice-common libreoffice-style-galaxy samba-common\
+apt-get purge wolfram-engine desktop-base lightdm lxappearance lxde-common \
+lxde-icon-theme lxinput lxpanel lxrandr  lxtask lxterminal triggerhappy \
+libreoffice-core libreoffice-common libreoffice-style-galaxy samba-common \
 samba-libs squeak-plugins-scratch squeak-vm supercollider
 
 apt-get $apt_optn -f install # while that shouldn't be required.
@@ -118,9 +117,13 @@ case $1 in
         echo -e "\t\nNOT installing weewx\n"
         ;;
         *)
+           echo -e "\n\tSetting up the local apt repository with weewx\n"
+           curl -s http://weewx.com/keys.html | sudo apt-key add -
+           echo -e "deb [arch=all] http://weewx.com/apt/ squeeze main" | sudo tee /etc/apt/sources.list.d/weewx.list
+
            echo -e "\n\tFetching and Installing weewx\n"
-           wget http://weewx.com/downloads/$weewx_version
-           sudo dpkg -i $weewx_version
+           sudo apt-get update
+           sudo apt-get install weewx
 
            echo -e "\n\tCompleting weewx installation\n"
            # apt-get $apt_optn update # ignoring as we've only just done an update.
