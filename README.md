@@ -13,6 +13,9 @@ https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/Rorpi-Home
 https://groups.google.com/forum/#!forum/rorpi-discussion
 
 ## Updates:
+### Feb 2017
+* Add notes on setting up a RTC-  https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-preinstall#Time_keeping
+
 ### Jan 2017
 * Default to using weewx's apt repository for installation of weewx. Simpler for the user, much simpler for the scripting.
 * If you are using the helper script (rorpi-preinstall.sh), an option has been added to allow systemd to be retained as the init method. This appears to work without anything breaking too severely, but it's a work in progress and so the option is perhaps only for the adventurous?
