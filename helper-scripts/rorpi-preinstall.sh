@@ -14,8 +14,9 @@
 #       Fix sed PATH alteration
 # 0.11: Use the weewx apt repository.
 # 0.12: Add an option to retain systemd. !! Work in progress - breakages may occur !!
+# 0.13: Add RTC notes
 #
-# Version 0.12
+# Version 0.13
 
 # apt-get provides an option to say yes to installation targets by using the -y string
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
@@ -125,6 +126,10 @@ apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitai
 
 #apt-get $apt_optn install  ssmtp # optional
 #apt-get $apt_optn install iotop sysstat lsof # stress-ng if you want to "test" the install??
+
+# for optional RTC configuration...
+# see https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-preinstall#RTC_Optional
+apt-get install i2c-tools
 
 echo -e "\n\tPurging fake -hwclock\n"
 apt-get $apt_optn purge fake-hwclock
