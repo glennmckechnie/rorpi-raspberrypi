@@ -13,6 +13,12 @@ https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/Rorpi-Home
 https://groups.google.com/forum/#!forum/rorpi-discussion
 
 ## Updates:
+### Feb 2017 
+Using weewx's internal report RSYNC skin to perform backups.
+
+https://github.com/weewx/weewx/wiki/Using-the-RSYNC-skin-as-a-backup-solution 
+
+
 ### Feb 2017
 * Add notes on setting up a RTC-  https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-preinstall#Time_keeping
 
