@@ -1,0 +1,12 @@
+#!/bin/sh
+mount -o remount,rw,noatime /
+mount -o remount,rw /boot
+#-# Glenn McKechnie - modified 21/04/16 
+wait
+#dphys-swapfile.mubox swapon
+dphys-swapfile swapon
+
+#-# Glenn McKechnie - modified 21/04/16 
+##Added as a function to ~/.bashrc
+#mount | grep root
+

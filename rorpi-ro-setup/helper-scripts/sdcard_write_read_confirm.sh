@@ -61,8 +61,6 @@ if [ "$type_p" = "FAT32" ]
       #pause "$image $devyce"
     else
       printf "\n\n  Aborting script as this (%s) doesn't appear to be a\n\t\t suitable partion (Windows FAT32)\n" $devyce
-      sleep 2
-      echo -e "\n\nare you really, really sure??\n\n"
       exit 0
 fi
 }

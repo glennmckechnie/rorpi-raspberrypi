@@ -1,4 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
+# ============== ropi extras are below this line ===================
 
 # Note: PS1 and umask are already set in /etc/profile. You should not
 # need this unless you want different defaults for root.
@@ -8,8 +9,9 @@
 # additions to ~/.bashrc for ropi management
 
 alias spl='dpkg --get-selections > ~/`date '+%Y%m%d%H%M'`-`hostname`-package-selections'
-alias rero="sudo /usr/local/sbin/remountro"
-alias rerw="sudo /usr/local/sbin/remountrw"
+alias mountisbusy="lsof +L1; lsof|sed -n '/SYSV/d; /DEL\|(path /p;' |grep -Ev '/(dev|home|tmp|var)'"
+alias rero="remountro"
+alias rerw="remountrw"
 
 
 # Display drive state on command line

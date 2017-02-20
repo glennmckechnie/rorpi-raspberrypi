@@ -1,0 +1,45 @@
+# Defaults for voyage-util and voyage-sync initscripts
+# sourced by /etc/init.d/voyage-util and /etc/init.d/voyage-sync
+# installed at /etc/default/voyage-util and /etc/init.d/voyage-sync
+# by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Additional options that are passed to the Daemon.
+DAEMON_OPTS=""
+
+# set it to YES to enable LEDS for WRAP/ALIX, NO to disable
+#VOYAGE_LEDS="YES"
+VOYAGE_LEDS="NO"
+
+# Apart from /var/tmp and /var/log, add extra directories to allow read-write.
+# It is a space-separated list of directories for holding updates of files in
+# the directory by tmpfs/aufs/unionfs and sync back to disk before reboot.
+# List directories without leading slash!
+VOYAGE_SYNC_DIRS=""
+
+# set it to YES to enable recovery of directories after a power failure
+#VOYAGE_SYNC_RECOVER="NO"
+VOYAGE_SYNC_RECOVER="YES"
+
+# set this if you wish only selected directories to be recovered after a power failure
+# VOYAGE_SYNC_RECOVER is also needed
+VOYAGE_SYNC_RECOVER_DIRS=""
+
+# Similar to VOYAGE_SYNC_DIRS, a space-separated list of directories to allow
+# read-write, but do not support sync back  
+VOYAGE_RW_DIRS=""
+
+# set unionfs type for writable directory. Support tmp, unionfs and aufs.
+# Default is tmpfs
+#VOYAGE_UNIONFS=unionfs
+
+# set VOYAGE_SAVE_DATE_TIME to "YES" to enable saving date time before reboot
+# and restore saved time after reboot.
+VOYAGE_SAVE_DATE_TIME="YES"
+
+#VOYAGE_SYNC_RECOVER="YES"
+VOYAGE_SYNC_DIRS="$VOYAGE_SYNC_DIRS var/lib/weewx"
+VOYAGE_SYNC_RECOVER_DIRS=" var/lib/weewx"

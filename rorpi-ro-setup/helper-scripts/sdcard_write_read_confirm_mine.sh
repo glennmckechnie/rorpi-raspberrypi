@@ -29,7 +29,8 @@ then
     echo -e "cd to location of the image file to be written. Then, run this script"
     echo -e "and pay attention to the questions it may ask, or response it gives"
     echo -e "It attempts to save your butt, but it can't think... thankfully we can.\n"
-    exit 1
+                 exit 1
+        exit 1
 fi
 
 }
@@ -61,8 +62,6 @@ if [ "$type_p" = "FAT32" ]
       #pause "$image $devyce"
     else
       printf "\n\n  Aborting script as this (%s) doesn't appear to be a\n\t\t suitable partion (Windows FAT32)\n" $devyce
-      sleep 2
-      echo -e "\n\nare you really, really sure??\n\n"
       exit 0
 fi
 }

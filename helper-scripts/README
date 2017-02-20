@@ -1,0 +1,53 @@
+rorpi - raspberrypi
+
+A method to run a Raspberry Pi, using the Raspbian distribution, configured with a read only / file system - thus the name "Read Only Root Pi" or RORPi
+
+https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/Rorpi-Home
+
+For discussion, visit the google group at -
+
+https://groups.google.com/forum/#!forum/rorpi-discussion
+
+=== The scripts in this directory are... ===
+
+    sdcard_write_read_confirm.sh
+
+This performs the actions at the start of the preinstall wiki page, it assists in the first step of writing the image.
+https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-preinstall
+
+It is a script I've used to automate the write process and reduce errors when the brain is foggy. It's overkill because sometimes I need to be slowed down and forced to think, and this script helps do that.
+
+Running sdcard_write_read_confirm.sh will assist with the image transfer to the SDCard (providing you are on a Linux machine). 
+Entering the command ' bash sdcard_write_read_confirm.sh ' will display usage notes.
+Alternatively you can follow the manual instructions available where you got your Raspbian image.
+
+    rorpi-preinstall.sh
+
+This performs the actions of the preinstall wiki page.
+https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-preinstall
+
+Running rorpi-preinstall.sh will give you an updated version of Raspian with the added bonus of a Weewx install.
+You can edit this script and perform an automatic apt-get install, effectively answering yes to all questions, by changing apt_optn="" to apt_optn="-y" 
+The script can be run by entering the command ' bash rorpi-preinstall.sh ' It also accepts the option 'noweewx' from the command line if you wish to skip that step.
+
+
+    rorpi-readonly.sh
+
+This script has been contributed by ssinfod.
+It performs the actions described on the readonly wiki page.
+https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-readonly
+It can be run to automatically download the compressed source file, unpack its contents accordingly and perform the necessary actions to turn the system into a read-only one.
+
+Run as  ' bash rorpi-readonly.sh ' and it will quickly perform the read only root installation on the SDCard.
+
+
+If you use the above scripts, read the wiki notes, https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/Rorpi-Home , at least once as they describe what is happening, or happened!
+
+=== Extras ===
+
+    pi_voltagetest.py
+
+This is a script to emulate the pulsing graphic, or lightning bolt that appears on the monitor and indicates a low voltage (thus possible file or SDCard corruption.) We are probably (I am) running headless so we can't see that power indicator; this script is offered as a solution. Credit and further info via the scripts headers.
+It is offered as is, I've yet to test that it is as sensitive as the graphics.
+
+Run as python pi_voltagetest.py and it will display a status message in red, in the top right corner of your terminal.

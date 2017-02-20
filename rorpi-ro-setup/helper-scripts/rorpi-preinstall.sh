@@ -19,7 +19,7 @@
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
 apt_optn=""
 
-weewx_version="weewx_3.6.0-1_all.deb"
+weewx_version="weewx_3.5.0-1_all.deb"
 
 echo -e "\nIf you do not wish to install weewx then add 'noweewx'"
 echo -e "\n ie:- $0 noweewx\n"
@@ -118,7 +118,7 @@ case $1 in
         echo -e "\t\nNOT installing weewx\n"
         ;;
         *)
-           echo -e "\n\tFetching and Installing $weewx_version\n"
+           echo -e "\n\tFetching and Installing weewx\n"
            wget http://weewx.com/downloads/$weewx_version
            sudo dpkg -i $weewx_version
 
