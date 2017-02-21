@@ -30,10 +30,10 @@
 # 0.08: Fix creation of www directory
 # 0.09: Add run once logic to check_version. Remove errant paste
 #
-# Version 0.09
+# Version 0.10
 
 
-rorpitar_version=09 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=10 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
