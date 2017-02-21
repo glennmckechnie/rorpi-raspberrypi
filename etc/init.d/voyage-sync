@@ -69,6 +69,7 @@ copy_ro_to_rw() {
 			DIRMODE=$(stat -c "%a" $TMPFS_ROOT)
 			tar -C /ro -cf - . | tar -C $TMPFS_ROOT -xf -
 			chmod $DIRMODE $TMPFS_ROOT
+			chown ntp.ntp /tmp/var/lib/ntp
 		fi
 	fi
 }

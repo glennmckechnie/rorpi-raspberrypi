@@ -1,9 +1,0 @@
-#!/bin/sh
-echo "fastreboot:	Before sync: `cat /proc/meminfo |grep Dirty`"
-sync
-echo "fastreboot:	After sync: `cat /proc/meminfo |grep Dirty`"
-/usr/local/sbin/remountro
-echo "fastreboot:	Restart now..."
-# well, not too fast - fat fingers
-sleep 3
-reboot -d -f -i
