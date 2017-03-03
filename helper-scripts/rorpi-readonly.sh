@@ -29,10 +29,9 @@
 # 0.07: Consolidate name change
 # 0.08: Fix creation of www directory
 # 0.09: Add run once logic to check_version. Remove errant paste
-# 0.10: broken tarball fetch!
-# 0.11: correct version numbering
+# 0.10: correct version numbering
 #
-# Version 0.11
+# Version 0.10
 
 
 rorpitar_version=10 # keep this in sync with the last 2 numbers of latest Version number above,
