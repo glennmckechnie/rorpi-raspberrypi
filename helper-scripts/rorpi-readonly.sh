@@ -29,13 +29,15 @@
 # 0.07: Consolidate name change
 # 0.08: Fix creation of www directory
 # 0.09: Add run once logic to check_version. Remove errant paste
+# 0.10: broken tarball fetch!
+# 0.11: correct version numbering
 #
-# Version 0.10
+# Version 0.11
 
 
 rorpitar_version=10 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
-rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
+rorpitar=rorpi-ro-setup."$rorpitar_version".tar.gz
 
 FOLDER=""
 
