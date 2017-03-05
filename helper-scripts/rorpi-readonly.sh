@@ -88,9 +88,9 @@ backup_file () {
 
     if [ -f $FILE2 ];
     then
-        echo -e "$cyan SKIP. (File $FILE2 exists, ignoring backup) $norm"
+        echo -e " SKIP. (File $FILE2 exists, ignoring backup)"
     else
-        echo -e "$yellow BACK. (File $FILE2 did not exist, now copying) $norm"
+        echo -e " BACK. (File $FILE2 did not exist, now copying)"
         cp $FILE1 $FILE2
     fi
 }
@@ -144,9 +144,9 @@ fi
 rorpitar=rorpi-ro-setup."$thisversion".tar.gz
 if [ -f $rorpitar ];
 then
-    echo -e "$cyan SKIP. (File $rorpitar exists) $norm"
+    echo -e "$cyan SKIP. (File $rorpitar exists) using it! $norm"
 else
-    echo -e "$red WGET. (File $rorpitar does not exist) $norm"
+    echo -e "$yellow WGET. (File $rorpitar does not exist) $norm"
     wget https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/$rorpitar --no-check-certificate
     # add much needed error checking - no file fetched, no file unpacked, can't proceed until fixed!
     if [ $? -eq 0 ]
