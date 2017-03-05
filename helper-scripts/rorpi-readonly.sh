@@ -29,11 +29,13 @@
 # 0.07: Consolidate name change
 # 0.08: Fix creation of www directory
 # 0.09: Add run once logic to check_version. Remove errant paste
+# 0.10: correct version numbering
+# 0.11: add download and unpack check, to prevent version 0.10 correction happening again!
 #
-# Version 0.10
+# Version 0.11
 
 
-rorpitar_version=10 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=11 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
@@ -137,7 +139,24 @@ then
 else
     echo "WGET. (File $rorpitar does not exist)"
     wget https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/$rorpitar --no-check-certificate
-    tar -zxf $rorpitar
+    # add much needed error checking - no file fetched, no file unpacked, can't proceed until fixed!
+    if [ $? -eq 0 ]
+    then
+       echo "Successfully fetched $rorpitar"
+       tar -zxf $rorpitar
+       if [ $? -ne 0 ]
+       then
+          echo "Aborting $0 script - failed to unpack $rorpitar"
+          echo "This needs to be fixed before re-running this script"
+          exit 1
+       else
+          echo "Succesfully unpacked $rorpitar"
+       fi
+    else
+       echo "Aborting $0 script - failed to fetch $rorpitar"
+       echo "This needs to be fixed before re-running this script"
+       exit 1
+    fi
 fi
 
 #Change directory to root
