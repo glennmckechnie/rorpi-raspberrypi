@@ -40,6 +40,11 @@
 ##                    # as tarball will probably be updated as well
 ##rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
+red='\e[0;31m'
+yellow='\e[0;33m'
+cyan='\e[0;36m'
+norm='\e[0m'
+
 FOLDER=""
 
 #===============================================================================
@@ -59,16 +64,17 @@ check_version()
    if [[ "$winner" < $hubversion ]]
    then
      cp /tmp/"$tempfile" /root/rorpi-readonly."$hubversion".sh
-     echo " "An updated rorpi-readonly.sh "(Version $hubversion)" is available on github.
-     echo " "It is now available here at /root/rorpi-readonly."$hubversion".sh
-     echo "      "bash /root/rorpi-readonly-"$hubversion".sh
-     echo " "It is strongly suggested to use this newer version instead.
+     echo -e "$yellow An updated rorpi-readonly.sh (Version $hubversion) is available on github."
+     echo -e "It is now available here at /root/rorpi-readonly.$hubversion.sh"
+     echo -e "$cyan        bash /root/rorpi-readonly-$hubversion.sh"
+     echo -e "$yellow It is strongly suggested to use this newer version instead. $norm"
 
    exit 0
    else
-     echo "script version on github is $hubversion"
-     echo "This version is $thisversion so doesn't need updating"
-     echo "This script will continue in 6 seconds (Ctrl-C to abort)"
+     echo -e "$yellow  The script version on github is $hubversion"
+     echo -e " This version is $thisversion so doesn't need updating"
+     echo -e "                Okay to continue"
+     echo -e " This script will continue in 6 seconds $cyan (Ctrl-C to abort) $norm"
      sleep 6
      return 0
    fi
@@ -81,9 +87,9 @@ backup_file () {
 
     if [ -f $FILE2 ];
     then
-        echo "SKIP. (File $FILE2 exists, ignoring backup)"
+        echo -e "$cyan SKIP. (File $FILE2 exists, ignoring backup) $norm"
     else
-        echo "BACK. (File $FILE2 did not exist, now copying)"
+        echo -e "$yellow BACK. (File $FILE2 did not exist, now copying) $norm"
         cp $FILE1 $FILE2
     fi
 }
@@ -91,8 +97,8 @@ backup_file () {
 #===============================================================================
 #MAIN
 #===============================================================================
-STRING="Script begin..."
-echo $STRING
+i echo -e "$yellow Script begin... $norm"
+
 
 # We don't want any accidents so we'll check if we are running on a raspberry pi
 # and if so assume it's okay to continue, if not we Panic! 
@@ -100,14 +106,14 @@ echo $STRING
 grep /boot/issue.txt -e Raspberry > /dev/null 2>&1
 if (( $? != "0" ))
 then
- echo "Not a raspberry pi, aborting script."
+ echo -e "$red Not a raspberry pi, aborting script. $norm"
  exit 1 # exit with error
 fi
 
 # This script must be executed under root (ie: 'sudo -i')
 # Make sure only root can run our script
 if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
+   echo -e "$red This script must be run as root $norm" 1>&2
    exit 1 # exit with error
 fi
 
@@ -127,7 +133,7 @@ cd /root
 # (see the end of this script) and abort if present
 if [  -f /root/rorpi-ro-setup/done-once-already ]
 then
-    echo " Aborting script as it has already been run. "
+    echo -e "$red Aborting script as it has already been run.  $norm"
     exit 1 # exit with error
 fi
 
@@ -137,26 +143,26 @@ fi
 rorpitar=rorpi-ro-setup."$thisversion".tar.gz
 if [ -f $rorpitar ];
 then
-    echo "SKIP. (File $rorpitar exists)"
+    echo -e "$cyan SKIP. (File $rorpitar exists) $norm"
 else
-    echo "WGET. (File $rorpitar does not exist)"
+    echo -e "$red WGET. (File $rorpitar does not exist) $norm"
     wget https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/$rorpitar --no-check-certificate
     # add much needed error checking - no file fetched, no file unpacked, can't proceed until fixed!
     if [ $? -eq 0 ]
     then
-       echo "Successfully fetched $rorpitar"
+       echo -e "$yellow Successfully fetched $rorpitar $norm"
        tar -zxf $rorpitar
        if [ $? -ne 0 ]
        then
-          echo "Aborting $0 script - failed to unpack $rorpitar"
-          echo "This needs to be fixed before re-running this script"
+          echo -e "$red Aborting $0 script - failed to unpack $rorpitar"
+          echo -e "$yellow This needs to be fixed before re-running this script $norm"
           exit 1
        else
-          echo "Succesfully unpacked $rorpitar"
+          echo -e "$yellow Succesfully unpacked $rorpitar $norm"
        fi
     else
-       echo "Aborting $0 script - failed to fetch $rorpitar"
-       echo "This needs to be fixed before re-running this script"
+       echo -e "$red Aborting $0 script - failed to fetch $rorpitar"
+       echo -e "$yellow This needs to be fixed before re-running this script $norm"
        exit 1
     fi
 fi
@@ -165,7 +171,7 @@ fi
 cd /root
 
 # Backup file
-echo -e "\tBacking up files to *.org"
+echo -e "\t$yellow Backing up files to *.org $norm"
 backup_file '/boot/cmdline.txt'
 backup_file '/etc/dphys-swapfile'
 backup_file '/etc/fstab'
@@ -180,7 +186,7 @@ backup_file '/etc/init.d/checkroot-bootclean.sh'
 
 
 #Create directories
-echo -e "\tCreating directories"
+echo -e "\t$yellow Creating directories $norm"
 mkdir /etc/lighttpd
 mkdir /lib/voyage-utils
 mkdir -p /ro/home/pi
@@ -195,7 +201,7 @@ mkdir -p /ro/var/www/html/weewx/NOAA  # if lighttpd is not installed
 
 # Create tmp directories. (needed for the symlink below)
 # Note: See also below for chown on ntp folder.
-echo -e "\tCreating /tmp directories"
+echo -e "\t$yellow Creating /tmp directories $norm"
 mkdir -p /tmp/var/cache/unbound
 mkdir -p /tmp/var/lib/dhcp
 mkdir /tmp/var/lib/dhcpcd5
@@ -209,7 +215,7 @@ mkdir -p /tmp/var/www/html/weewx/NOAA
 FOLDER='rorpi-ro-setup'
 
 #boot
-echo -e "\tCopying system files"
+echo -e "\t$yellow Copying system files $norm"
 cp ./$FOLDER/boot/cmdline.txt.rorpi /boot/cmdline.txt
 
 #etc
@@ -223,11 +229,11 @@ cp ./$FOLDER/etc/default/voyage-util /etc/default/voyage-util
 cp ./$FOLDER/etc/init.d/checkroot-bootclean.sh.rorpi /etc/init.d/checkroot-bootclean.sh
 cp ./$FOLDER/etc/init.d/voyage-sync /etc/init.d/voyage-sync
 cp ./$FOLDER/etc/lighttpd/lighttpd.conf.rorpi /etc/lighttpd/lighttpd.conf
-cp -Rp ./$FOLDER/ro/var/spool/cron/crontabs /ro/var/spool/cron/crontabs # copied rather than created tp preserve group and permissions
+cp -Rp ./$FOLDER/ro/var/spool/cron/crontabs /ro/var/spool/cron/crontabs # copied rather than created to preserve group and permissions
 
 
 #Create link1 (soft?)
-echo -e "\tCreating symlinks"
+echo -e "\t$yellow Creating symlinks $norm"
 rm /etc/resolv.conf
 ln -sf /etc/resolvconf/run/resolv.conf /etc/resolv.conf
 
@@ -237,14 +243,14 @@ ln -sf /run/resolvconf run
 cd /root
 
 #bash
-echo -e "\tSetting up bash aliases, and extras"
+echo -e "\t$yellow Setting up bash aliases, and extras $norm"
 
 if [ -f "./$FOLDER/root/.bashrc-append.rorpi.done" ]
 then 
   #Warning: Execute script only once.
-  echo "Skipping the .bash* step!"
-  echo "Note: We shoud append text only once to .bash_logout and .bashrc"
-  echo "and we've done it already"
+  echo "$yellow Skipping the .bash* step!"
+  echo "Note: We should append text only once to .bash_logout and .bashrc"
+  echo "and we've done it already $norm"
 else
   cat ./$FOLDER/root/.bash_logout.rorpi >> /root/.bash_logout
   cat ./$FOLDER/root/.bashrc-append.rorpi >> /root/.bashrc
@@ -261,7 +267,7 @@ else
 fi
 
 #Copy the other files to folder
-echo -e "\tCopying remaining files, helper scripts"
+echo -e "\t$yellow Copying remaining files, helper scripts $norm"
 cp ./$FOLDER/lib/voyage-utils/100-rpi /lib/voyage-utils/
 
 #Helper scripts to remount
@@ -276,7 +282,7 @@ ln -sf remountrw rerw
 cd /root
 
 #Symlink to tmp
-echo -e "\tSetting up critical folder links"
+echo -e "\t$yellow Setting up critical folder links $norm"
 rm -rf /var/cache/unbound && ln -sf /tmp/var/cache/unbound /var/cache/unbound
 rm -rf /var/lib/dhcp && ln -sf /tmp/var/lib/dhcp /var/lib/dhcp
 rm -rf /var/lib/dhcpcd5 && ln -sf /tmp/var/lib/dhcpcd5 /var/lib/dhcpcd5
@@ -293,19 +299,17 @@ cd /var/lib
 chown ntp.ntp ntp
 
 #init script and swap
-echo -e "\tRunning update-rc.d to enable voyage-sync" 
+echo -e "\t$yellow Running update-rc.d to enable voyage-sync $norm" 
 update-rc.d voyage-sync defaults
 update-rc.d  dphys-swapfile disable
 
-echo -e "\tCreating lock file to prevent this script running again"
+echo -e "\t$yellow Creating lock file to prevent this script from being run again $norm"
 touch /root/rorpi-ro-setup/done-once-already
 ls -al /root/rorpi-ro-setup/done-once-already
 
-STRING="Script end."
-echo $STRING
+echo -e "$yellow Script end."
 
-STRING="You can now reboot the RPI with 'reboot -n'"
-echo $STRING
+echo -e "You can now reboot the RPI using reboot -n $norm"
 
 exit 0 # exited successfully
 
