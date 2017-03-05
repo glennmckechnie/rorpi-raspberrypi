@@ -32,10 +32,10 @@
 # 0.10: correct version numbering
 # 0.11: add download and unpack check, to prevent version 0.10 correction happening again!
 #
-# Version 0.11
+# Version 0.10
 
 
-rorpitar_version=11 # keep this in sync with the last 2 numbers of latest Version number above,
+rorpitar_version=10 # keep this in sync with the last 2 numbers of latest Version number above,
                     # as tarball will probably be updated as well
 rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
