@@ -188,7 +188,7 @@ backup_file '/etc/init.d/checkroot-bootclean.sh'
 
 #Create directories
 echo -e "\t$yellow Creating directories $norm"
-mkdir /etc/lighttpd
+mkdir -p /etc/lighttpd # don't complain if it exists
 mkdir /lib/voyage-utils
 mkdir -p /ro/home/pi
 mkdir -p /ro/var/cache/unbound
