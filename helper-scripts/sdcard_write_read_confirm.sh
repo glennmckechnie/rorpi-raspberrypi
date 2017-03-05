@@ -128,22 +128,27 @@ echo action = "$action"
                  exit 1
         ;;
 esac
-exit 0
+#exit 0
 # The extras below are used to transfer files to the fresh image, before we run it for the first time
 # In my case I need to modify config.txt to be able to make the HDMI display readable.
 # I also transfer copies of the rorpi helper-scripts to get things started.
+# skip if it's not me!
 
-mkdir -p /mnt/sdcard
-mount "${devyce}2" /mnt/sdcard
-mount "${devyce}1" /mnt/sdcard/boot
+me="/home/graybeard/github/rorpi-raspberrypi/helper-scripts/"
+if [ -d $me ]
+then
+  mkdir -p /mnt/sdcard
+  mount "${devyce}2" /mnt/sdcard
+  mount "${devyce}1" /mnt/sdcard/boot
 
-cp /home/graybeard/rorpi-temp/config.txt /mnt/sdcard/boot/
-cp -r /home/graybeard/github/rorpi-raspberrypi/rorpi-ro-setup/helper-scripts/* /mnt/sdcard/root/
-sed -i '/apt_optn/ s/\"\"/\"-y\"/ # added by script' /mnt/sdcard/root/rorpi-preinstall.sh
+  #cp /home/graybeard/rorpi-temp/config.txt /mnt/sdcard/boot/
+  cp -r $me/* /mnt/sdcard/root/
+  sed -i '/apt_optn/ s/\"\"/\"-y\"/ # added by script' /mnt/sdcard/root/rorpi-preinstall.sh
+  sync
 
-umount /mnt/sdcard/boot
-umount /mnt/sdcard
-
+  umount /mnt/sdcard/boot
+  umount /mnt/sdcard
+fi
 exit 0
 
 # Typical output from fdisk -l for a Sandisk cruzer 8G USB stick
