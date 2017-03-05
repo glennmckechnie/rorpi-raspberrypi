@@ -32,12 +32,13 @@
 # 0.10: correct version numbering
 # 0.11: add download and unpack check, to prevent version 0.10 correction happening again!
 #
-# Version 0.10
+# Version 0.11
 
 
-rorpitar_version=10 # keep this in sync with the last 2 numbers of latest Version number above,
-                    # as tarball will probably be updated as well
-rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
+##remove at 0.11, move down to calling function and use $thisversion correctly  - way less confusion!
+##rorpitar_version=11 # keep this in sync with the last 2 numbers of latest Version number above,
+##                    # as tarball will probably be updated as well
+##rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
 FOLDER=""
 
@@ -133,6 +134,7 @@ fi
 # We've passed all tests, we can continue
 
 #Download 'rorpi-ro-setup-x.x.x.x.tar.gz' in the /root folder.
+rorpitar=rorpi-ro-setup."$thisversion".tar.gz
 if [ -f $rorpitar ];
 then
     echo "SKIP. (File $rorpitar exists)"
