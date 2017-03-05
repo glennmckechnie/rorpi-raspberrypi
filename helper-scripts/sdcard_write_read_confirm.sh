@@ -10,6 +10,11 @@
 #-# Glenn McKechnie - modified 21/04/16 
 # GPL'd if anyone needs to ask.
 
+red='\e[0;31m'
+yellow='\e[0;33m'
+cyan='\e[0;36m'
+norm='\e[0m'
+
 filetype=""
 basedir=$(pwd)
 devyce=$1
@@ -24,18 +29,20 @@ call_usage(){
 if [ $# -ne 3 ]
 then
     echo -e "\n\\033[35m Usage: $0 <device> <imagefile> <action>\\033[0;39m"
-    echo -e "\neg:- $0 /dev/sde voyage-mubox-4.img write"
-    echo -e "A script to write, read, and confirm image files (*.img)to disk"
-    echo -e "cd to location of the image file to be written. Then, run this script"
-    echo -e "and pay attention to the questions it may ask, or response it gives"
-    echo -e "It attempts to save your butt, but it can't think... thankfully we can.\n"
+    echo -e "\n $yellow eg:- $0 /dev/sde voyage-mubox-4.img write"
+    echo -e "$yellow A script to write, read, and confirm image files (*.img) to disk"
+    echo -e " cd to location of the image file to be written. Then, run this script"
+    echo -e " and pay attention to the questions it may ask, or response it gives"
+    echo -e " It attempts to save your butt, but it can't think... thankfully we can.\n"
+    echo -e "$red Need to use sudo or be root user to run it. Either way - be careful! $norm"
     exit 1
 fi
 
 }
 
 call_pause(){
-  printf "\n   Type in yes (then Enter) if this is the correct device\n"
+  echo -e "\n$yellow   Type in yes (then Enter) if this is the correct device\n"
+  echo -e "\n   Typing anything else will abort the process or use Ctrl-C $norm\n"
   read response
   case $response in
         yes)
@@ -66,6 +73,26 @@ if [ "$type_p" = "FAT32" ]
       exit 0
 fi
 }
+
+call_me () {
+me="/home/graybeard/github/rorpi-raspberrypi/helper-scripts/"
+if [ -d $me ]
+then
+  mkdir -p /mnt/sdcard
+  mount "${devyce}2" /mnt/sdcard
+  mount "${devyce}1" /mnt/sdcard/boot
+
+  #cp /home/graybeard/rorpi-temp/config.txt /mnt/sdcard/boot/
+  cp -r $me/* /mnt/sdcard/root/
+  sed -i '/apt_optn/ s/\"\"/\"-y\"/ # added by script' /mnt/sdcard/root/rorpi-preinstall.sh
+  sync
+
+  umount /mnt/sdcard/boot
+  umount /mnt/sdcard
+fi
+}
+
+
 call_usage  "$1" "$2" "$3"
 
 if [ ! -f "${basedir}/${image}" ]
@@ -81,16 +108,16 @@ case $filetype in
         Zip)
         echo
         #/usr/bin/file "${basedir}/${image}"
-        echo "Specified file is a Zip file, now unpacking it"
+        echo -e "$yellow Specified file is a Zip file, now unpacking it $cyan"
         /usr/bin/unzip "${basedir}/${image}"
-        echo "Restart this script with the above filename as the image file!"
+        echo -e "$yellow Restart this script with the above filename as the image file! $norm"
         exit 0
         echo
         ;;
         DOS/MBR)
-        echo "Image file identifies as..."
+        echo -e "$yellow Image file identifies as... $cyan"
         /usr/bin/file "${basedir}/${image}"
-        echo "Now checking device specified..."
+        echo -e "$yellow Now checking device specified... $norm"
 
       sudo fdisk -l # shows us the last entry - which should be our just plugged in SDCard?
       echo -e "\n\n\n\t\\033[36m We begin here...\nPay attention to the drive size - is that really your SDCard?\\033[0;39m\n\n\n"
@@ -100,6 +127,7 @@ case $filetype in
       # must pay close attention to your answer regarding the correct device!
       check_disk
       call_pause "$image $devyce"
+
 #exit 0 #test stop
 echo action = "$action"
           case $action in
@@ -117,38 +145,25 @@ echo action = "$action"
                  sudo /usr/bin/md5sum "${basedir}/$image" "${basedir}/${tymestamp}-$image"
                 ;;
                 *)
-                 echo -e "\nUnknown action (should be write, read, or confirm) -- aborting process\n"
+                 echo -e "\n$red Unknown action (should be write, read, or confirm) -- aborting process $norm\n"
                  call_usage
                  exit 1
                 ;;
           esac
         ;;
         *)
-        echo "Unknown image file type -- aborting process"
+        echo -e "$yellow Unknown image file type -- aborting process $norm"
                  exit 1
         ;;
 esac
-#exit 0
-# The extras below are used to transfer files to the fresh image, before we run it for the first time
+
+# call_me is used to transfer files to the fresh image, before we run it for the first time
 # In my case I need to modify config.txt to be able to make the HDMI display readable.
 # I also transfer copies of the rorpi helper-scripts to get things started.
-# skip if it's not me!
+# It will skip if it's not me!
 
-me="/home/graybeard/github/rorpi-raspberrypi/helper-scripts/"
-if [ -d $me ]
-then
-  mkdir -p /mnt/sdcard
-  mount "${devyce}2" /mnt/sdcard
-  mount "${devyce}1" /mnt/sdcard/boot
+call_me "$devyce"
 
-  #cp /home/graybeard/rorpi-temp/config.txt /mnt/sdcard/boot/
-  cp -r $me/* /mnt/sdcard/root/
-  sed -i '/apt_optn/ s/\"\"/\"-y\"/ # added by script' /mnt/sdcard/root/rorpi-preinstall.sh
-  sync
-
-  umount /mnt/sdcard/boot
-  umount /mnt/sdcard
-fi
 exit 0
 
 # Typical output from fdisk -l for a Sandisk cruzer 8G USB stick
