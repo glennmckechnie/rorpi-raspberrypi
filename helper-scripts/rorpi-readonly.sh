@@ -11,7 +11,7 @@
 # Note: This script should be executed only once.
 #       If we execute it more than once, then we should verify the content of: 
 #       '.bash_logout' and '.bashrc' for root and pi user.
-#         
+#
 # Version
 # 0.1.1: initial version. Kindly contributed by ssinfod
 # 0.02: (was 0.1.2) introduce system check (run only on a raspberry pi only). Add stop file
@@ -29,13 +29,14 @@
 # 0.07: Consolidate name change
 # 0.08: Fix creation of www directory
 # 0.09: Add run once logic to check_version. Remove errant paste
-# 0.10: correct version numbering
+# 0.10: correct version numbering screw up!
 # 0.11: add download and unpack check, to prevent version 0.10 correction happening again!
+#       then colorize script output. (no bump, not tested fully--yet)
 #
 # Version 0.11
 
 
-##remove at 0.11, move down to calling function and use $thisversion correctly  - way less confusion!
+##removed at 0.11, move down to calling function and use $thisversion correctly  - way less confusion!
 ##rorpitar_version=11 # keep this in sync with the last 2 numbers of latest Version number above,
 ##                    # as tarball will probably be updated as well
 ##rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
