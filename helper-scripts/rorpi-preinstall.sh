@@ -23,7 +23,7 @@
 # set this as required, ie:- apt_optn="-y"  will allow it to be done automatically
 
 red='\e[0;31m'
-yellow='\e[0;33m'
+yellow='\e[1;33m'
 cyan='\e[0;36m'
 norm='\e[0m'
 
@@ -53,7 +53,7 @@ check_version()
   thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    # limit this to one check per session - that should be more than enough!
-   touch /tmp/check_preinstall
+   touch /root/check_preinstall
    if [[ "$winner" < $hubversion ]]
    then
      cp /tmp/"$tempfile" /root/rorpi-preinstall."$hubversion".sh
@@ -74,7 +74,7 @@ check_version()
 
 # run the check once only - the second run is probably redundant
 
-if [ ! -f /tmp/check_preinstall ]
+if [ ! -f /root/check_preinstall ]
 then
 check_version
 fi
@@ -118,14 +118,15 @@ case $initmethod in
 esac
 else
  echo -e "\n\t$yellow Continuing the installation, or updating process $norm\n"
+rm -f /root/check_preinstall
 fi
 
-# possibly hitting this after the reboot required to cleanly remove sysV
+# possibly hitting this after the reboot required to cleanly remove systemD
 
 cd /root # and we still should be there already - but...
  rm -f /root/initmethod
 
- case $initmethod in
+case $initmethod in
         sysv)
         apt-get $apt_optn remove --purge --auto-remove systemd
         ;;
@@ -143,7 +144,8 @@ apt-get $apt_optn install lighttpd sqlite3 rsync mc lynx byobu bootlogd multitai
 # see https://github.com/glennmckechnie/rorpi-raspberrypi/wiki/rorpi-raspberrypi-preinstall#RTC_Optional
 apt-get install i2c-tools
 
-echo -e "\n\t$yellow Purging fake -hwclock $norm\n"
+# required for weewx, RTC install, ntp setup - remove cruft.
+echo -e "\n\t$yellow Purging fake-hwclock and cruft. $norm\n"
 apt-get $apt_optn purge fake-hwclock
 
 apt-get purge wolfram-engine desktop-base lightdm lxappearance lxde-common \
@@ -182,6 +184,7 @@ esac
 mc
 
 echo -e "\n\t$yellow This Raspbian installation has been updated. Also check your weewx installation "
-echo -e "\t is working and then continue with the read only installation steps (or use the"
+echo -e "\t is working. The next step is to continue with the read only installation steps (or use the"
 echo -e "\t rorpi-readonly.sh script) $norm\n"
 
+exit 0

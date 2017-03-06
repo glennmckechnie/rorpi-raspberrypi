@@ -42,7 +42,7 @@
 ##rorpitar=rorpi-ro-setup.0."$rorpitar_version".tar.gz
 
 red='\e[0;31m'
-yellow='\e[0;33m'
+yellow='\e[1;33m'
 cyan='\e[0;36m'
 norm='\e[0m'
 
@@ -98,7 +98,7 @@ backup_file () {
 #===============================================================================
 #MAIN
 #===============================================================================
-i echo -e "$yellow Script begin... $norm"
+echo -e "$yellow Script begin... $norm"
 
 
 # We don't want any accidents so we'll check if we are running on a raspberry pi

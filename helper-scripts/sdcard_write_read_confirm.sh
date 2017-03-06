@@ -11,7 +11,7 @@
 # GPL'd if anyone needs to ask.
 
 red='\e[0;31m'
-yellow='\e[0;33m'
+yellow='\e[1;33m'
 cyan='\e[0;36m'
 norm='\e[0m'
 
@@ -34,7 +34,7 @@ then
     echo -e " cd to location of the image file to be written. Then, run this script"
     echo -e " and pay attention to the questions it may ask, or response it gives"
     echo -e " It attempts to save your butt, but it can't think... thankfully we can.\n"
-    echo -e "$red Need to use sudo or be root user to run it. Either way - be careful! $norm"
+    echo -e "$red (Need to use sudo or be root to run it too. Either way - be careful!) $norm"
     exit 1
 fi
 
@@ -85,6 +85,7 @@ then
   #cp /home/graybeard/rorpi-temp/config.txt /mnt/sdcard/boot/
   cp -r $me/* /mnt/sdcard/root/
   sed -i '/apt_optn/ s/\"\"/\"-y\"/ # added by script' /mnt/sdcard/root/rorpi-preinstall.sh
+  touch /mnt/sdcard/$tymestamp-rorpi-finished
   sync
 
   umount /mnt/sdcard/boot
@@ -93,7 +94,7 @@ fi
 }
 
 
-call_usage  "$1" "$2" "$3"
+call_usage  "$devyce" "$image" "$action"
 
 if [ ! -f "${basedir}/${image}" ]
 then 
@@ -120,7 +121,7 @@ case $filetype in
         echo -e "$yellow Now checking device specified... $norm"
 
       sudo fdisk -l # shows us the last entry - which should be our just plugged in SDCard?
-      echo -e "\n\n\n\t\\033[36m We begin here...\nPay attention to the drive size - is that really your SDCard?\\033[0;39m\n\n\n"
+      echo -e "\n\n\n\t\t$red We begin here...\nPay attention to the drive size - is that really your SDCard? $norm\n\n\n"
       sudo /sbin/fdisk -l "$devyce"
       # comment out the following line if you don't want, or if the function to check, for a valid
       # FAT32 - W95 partition is giving you grief - With that done, and when running the script you
