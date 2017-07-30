@@ -93,6 +93,8 @@ then
 fi
 }
 
+############## main ###########
+
 
 call_usage  "$devyce" "$image" "$action"
 

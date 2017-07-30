@@ -39,8 +39,8 @@ echo -e "\n$cyan                  ie:- $0 noweewx $norm\n"
 sleep 2
 echo -e "\n$yellow If you want to retain systemd, and you're willing to test the result."
 echo -e "\n Then edit the 'initmethod' variable within this script"
-echo -e "\n          ie: uncomment #initmethod=systemd"
-echo -e "\n Feedback on the success or otherwise would be appreciated. $norm"
+echo -e "\n$cyan          ie: uncomment #initmethod=systemd"
+echo -e "\n$yellow Feedback on the success or otherwise would be appreciated. $norm"
 sleep 4
 
 check_version()
