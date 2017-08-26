@@ -32,8 +32,9 @@
 # 0.10: correct version numbering screw up!
 # 0.11: add download and unpack check, to prevent version 0.10 correction happening again!
 #       then colorize script output. (no bump, not tested fully--yet)
+# 0.12: fix reported issue. "rorpi-readonly.sh can fail if rorpi-ro-setup tar is not unpacked"
 #
-# Version 0.11
+# Version 0.12
 
 
 ##removed at 0.11, move down to calling function and use $thisversion correctly  - way less confusion!
@@ -46,6 +47,7 @@ yellow='\e[1;33m'
 cyan='\e[0;36m'
 norm='\e[0m'
 
+thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
 FOLDER=""
 
 #===============================================================================
@@ -58,7 +60,7 @@ check_version()
   wget -O /tmp/$tempfile https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/helper-scripts/rorpi-readonly.sh
 
   hubversion=$(grep /tmp/$tempfile -e '^# Version ' | awk -F " " '{print $3}')
-  thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
+#  thisversion=$(grep "$0" -e '^# Version ' | awk -F " " '{print $3}')
   winner=$(echo -e "$hubversion\n$thisversion" | sed '/^$/d' | sort -V | head -1)
    # limit this to one check per session - that should be more than enough!
    touch /tmp/check_readonly
@@ -143,29 +145,40 @@ fi
 #Download 'rorpi-ro-setup-x.x.x.x.tar.gz' in the /root folder.
 rorpitar=rorpi-ro-setup."$thisversion".tar.gz
 if [ -f $rorpitar ];
-then
-    echo -e "$cyan SKIP. (File $rorpitar exists) using it! $norm"
+ then
+    echo -e "$cyan SKIP download. (File $rorpitar exists) using that file! $norm"
 else
-    echo -e "$yellow WGET. (File $rorpitar does not exist) $norm"
+    echo -e "$yellow WGET. (File $rorpitar does not exist) fetching new file $norm"
     wget https://github.com/glennmckechnie/rorpi-raspberrypi/raw/master/$rorpitar --no-check-certificate
     # add much needed error checking - no file fetched, no file unpacked, can't proceed until fixed!
     if [ $? -eq 0 ]
-    then
+     then
        echo -e "$yellow Successfully fetched $rorpitar $norm"
-       tar -zxf $rorpitar
-       if [ $? -ne 0 ]
-       then
-          echo -e "$red Aborting $0 script - failed to unpack $rorpitar"
-          echo -e "$yellow This needs to be fixed before re-running this script $norm"
-          exit 1
-       else
-          echo -e "$yellow Succesfully unpacked $rorpitar $norm"
-       fi
     else
        echo -e "$red Aborting $0 script - failed to fetch $rorpitar"
        echo -e "$yellow This needs to be fixed before re-running this script $norm"
        exit 1
     fi
+fi
+
+if [ -d /root/rorpi-ro-setup ]
+ then
+    # move any existing rorpi directory out of the way. Start afresh!
+    # This is to protect myself when developing. It saves the last version.
+    # It shouldn't affect, or be needed by anyone else - but just in case, it's here.
+    rm -rf /root/rorpi-ro-setup-old
+    mv /root/rorpi-ro-setup /root/rorpi-ro-setup-old
+    #mv /root/rorpi-ro-setup /root/rorpi-ro-setup-old-$(date +%d%H%M%S)
+fi
+
+tar -zxf $rorpitar
+if [ $? -ne 0 ]
+ then
+    echo -e "$red Aborting $0 script - failed to unpack $rorpitar"
+    echo -e "$yellow This needs to be fixed before re-running this script $norm"
+    exit 1
+else
+    echo -e "$yellow Succesfully unpacked $rorpitar $norm"
 fi
 
 #Change directory to root
