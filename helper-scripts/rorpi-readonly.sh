@@ -33,8 +33,9 @@
 # 0.11: add download and unpack check, to prevent version 0.10 correction happening again!
 #       then colorize script output. (no bump, not tested fully--yet)
 # 0.12: fix reported issue. "rorpi-readonly.sh can fail if rorpi-ro-setup tar is not unpacked"
+# 0.13: re-instate missing tarball files  -- .bash*
 #
-# Version 0.12
+# Version 0.13
 
 
 ##removed at 0.11, move down to calling function and use $thisversion correctly  - way less confusion!
